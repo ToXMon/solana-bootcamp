@@ -32,7 +32,7 @@ This repo tracks my complete bootcamp progress — exercises, projects, notes, a
 | Week | Focus | Status |
 |------|-------|--------|
 | 1 | Foundations & Mental Models | ✅ Complete |
-| 2 | First Deployments (Hello Solana, Counter PDA) | 🔄 In Progress |
+| 2 | First Deployments (Hello Solana, Counter PDA) | ✅ Complete |
 | 3-6 | Progressive Independence | ⏳ Upcoming |
 
 ## 🔑 Key Principles
