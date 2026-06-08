@@ -8,9 +8,9 @@
 
 ## Week 2: First Deployments
 - [x] Exercise 1 — Hello Solana: Setup environment, run default deploy ✅ Program ID: `ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3` on devnet
-- [ ] Exercise 2 — Counter PDA: Initialize and increment a PDA counter
-- [ ] Verify all deployments on Solana Explorer
-- [ ] Successfully run PDA tests
+- [x] Exercise 2 — Counter PDA: Initialize and increment a PDA counter ✅ Program ID: `Box6VnMVRFpCsGJbfkVr6JGS1sHuLeJbVv3Yq3R9CtSZ` on devnet
+- [x] Verify all deployments on Solana Explorer
+- [x] Successfully run PDA tests (3/3 passing)
 
 ## Weeks 3-6
 *Assignments will be added as course progresses*

@@ -47,6 +47,7 @@ This repo tracks my complete bootcamp progress — exercises, projects, notes, a
 | Program | ID | Network | Explorer |
 |---------|-----|---------|----------|
 | hello-solana | `ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3` | Devnet | [View](https://explorer.solana.com/address/ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3?cluster=devnet) |
+| counter-pda | `Box6VnMVRFpCsGJbfkVr6JGS1sHuLeJbVv3Yq3R9CtSZ` | Devnet | [View](https://explorer.solana.com/address/Box6VnMVRFpCsGJbfkVr6JGS1sHuLeJbVv3Yq3R9CtSZ?cluster=devnet) |
 
 ---
 
