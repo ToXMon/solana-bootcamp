@@ -44,7 +44,9 @@ This repo tracks my complete bootcamp progress — exercises, projects, notes, a
 
 ## 🚀 Deployments
 
-Programs deployed on devnet will be listed here with Explorer links.
+| Program | ID | Network | Explorer |
+|---------|-----|---------|----------|
+| hello-solana | `ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3` | Devnet | [View](https://explorer.solana.com/address/ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3?cluster=devnet) |
 
 ---
 
