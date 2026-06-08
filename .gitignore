@@ -1,0 +1,44 @@
+# Solana / Anchor
+.anchor/
+target/
+**/*.so
+node_modules/
+
+# Rust
+**/target/
+Cargo.lock
+**/*.rs.bk
+
+# Node / TypeScript
+node_modules/
+dist/
+.next/
+.env
+.env.local
+.env.*.local
+*.tsbuildinfo
+
+# Keys and secrets - NEVER commit
+**/*-keypair.json
+**/deploy/*.json
+!**/deploy/.gitkeep
+*.pem
+secrets.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Agent Zero project config (private)
+.a0proj/
+
+# Logs
+*.log
+npm-debug.log*
