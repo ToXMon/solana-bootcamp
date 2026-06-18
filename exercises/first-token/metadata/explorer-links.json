@@ -1,0 +1,8 @@
+{
+  "mint": "https://explorer.solana.com/address/GuHNePASqcVf8228AnCzSj2kMoVJpFoYw7N8DpAyXZpy?cluster=devnet",
+  "mainWalletATA": "https://explorer.solana.com/address/4HDh6ubpekpgG4qNwjtoq9nGAWMk7KNMJmfQUTAET76n?cluster=devnet",
+  "secondWalletATA": "https://explorer.solana.com/address/8Fwmf7pVQBk64efnh6QVv8rcueRABwmnm7HjrkzyGsGh?cluster=devnet",
+  "transferTx": "https://explorer.solana.com/tx/kJ1bUjJte5rcgwLSD9aLm1CjxqydGvTCiFZxdeECSQREDd3uEivTp8o5ZexUjFxyLzVGJcGA5R2UTcto522A5ds?cluster=devnet",
+  "createMintTx": "https://explorer.solana.com/tx/5YCvbUzTV8yjdXEiFQgujsSvRqd3psVhWLND4eg5xW32rR3LybEbtfRaPCGMX2FPY9ujtaZaNgBhgJ6dRwrnQR5z?cluster=devnet",
+  "mintTokensTx": "https://explorer.solana.com/tx/5DUzUhzPjKvaHBAJoMohgqnUhQsTTgvHboRsBwPnMnLR2soBmD32qAxpycz1sG5viMHr8bL4RLk4jXX5VYm4Bf45?cluster=devnet"
+}

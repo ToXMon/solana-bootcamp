@@ -1,0 +1,21 @@
+{
+  "mint": "GuHNePASqcVf8228AnCzSj2kMoVJpFoYw7N8DpAyXZpy",
+  "decimals": 9,
+  "cluster": "devnet",
+  "mainWallet": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+  "mainWalletAta": "4HDh6ubpekpgG4qNwjtoq9nGAWMk7KNMJmfQUTAET76n",
+  "secondWallet": "3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X",
+  "secondWalletAta": "8Fwmf7pVQBk64efnh6QVv8rcueRABwmnm7HjrkzyGsGh",
+  "mintAuthority": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+  "totalSupply": 1000,
+  "transferredAmount": 100,
+  "mainWalletBalance": 900,
+  "secondWalletBalance": 100,
+  "createdAt": "2026-06-18",
+  "signatures": {
+    "createMint": "5YCvbUzTV8yjdXEiFQgujsSvRqd3psVhWLND4eg5xW32rR3LybEbtfRaPCGMX2FPY9ujtaZaNgBhgJ6dRwrnQR5z",
+    "createMainAta": "4Ma5FaLwJ6nEYyizS6hYhwEN3XY2AcYbm6cAf91dUFr8ggSUGqJGUBEWU1kU2vUXG1HrRehMpPQH3dDTuZZ47kuT",
+    "mintTokens": "5DUzUhzPjKvaHBAJoMohgqnUhQsTTgvHboRsBwPnMnLR2soBmD32qAxpycz1sG5viMHr8bL4RLk4jXX5VYm4Bf45",
+    "transfer": "kJ1bUjJte5rcgwLSD9aLm1CjxqydGvTCiFZxdeECSQREDd3uEivTp8o5ZexUjFxyLzVGJcGA5R2UTcto522A5ds"
+  }
+}

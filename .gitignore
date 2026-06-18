@@ -42,3 +42,8 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+exercises/first-token/second-wallet.json
+
+# Python virtual environments
+venv/
+.venv/

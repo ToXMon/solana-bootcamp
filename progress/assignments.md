@@ -12,5 +12,13 @@
 - [x] Verify all deployments on Solana Explorer
 - [x] Successfully run PDA tests (3/3 passing)
 
-## Weeks 3-6
+## Week 3: First Token
+- [x] Exercise 3 — Create SPL token on devnet ✅ Mint: GuHNePASqcVf8228AnCzSj2kMoVJpFoYw7N8DpAyXZpy
+- [x] Exercise 3 — Create Associated Token Accounts (ATAs)
+- [x] Exercise 3 — Mint 1000 tokens
+- [x] Exercise 3 — Transfer tokens between wallets (100 to second wallet)
+- [x] Exercise 3 — Build TypeScript balance reader (tsx, decimals handled)
+- [x] Exercise 3 — Verify all operations on Solana Explorer (3 screenshots)
+
+## Weeks 4-6
 *Assignments will be added as course progresses*

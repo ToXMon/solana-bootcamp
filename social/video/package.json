@@ -1,0 +1,20 @@
+{
+  "name": "first-token-video",
+  "version": "1.0.0",
+  "description": "Remotion video celebrating first SPL token on Solana devnet",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "remotion render src/index.ts first-token-video out/first-token-video.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.391",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.391"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "5.9.2"
+  }
+}

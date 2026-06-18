@@ -34,3 +34,17 @@
 |---------|-----|---------|-------|
 | hello-solana | ggUpdzgva3CDB3UeDS6ntkLKgHGvrL5ApwW395Sj4k3 | Devnet | 1/1 |
 | counter-pda | Box6VnMVRFpCsGJbfkVr6JGS1sHuLeJbVv3Yq3R9CtSZ | Devnet | 3/3 |
+
+## Week 3: First Token (June 18, 2026)
+### Exercise 3: Your First Token ✅ COMPLETE
+- Created SPL token mint on devnet: GuHNePASqcVf8228AnCzSj2kMoVJpFoYw7N8DpAyXZpy (9 decimals)
+- Created main wallet ATA: 4HDh6ubpekpgG4qNwjtoq9nGAWMk7KNMJmfQUTAET76n
+- Minted 1000 tokens to main wallet ATA
+- Generated second test wallet: 3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X
+- Transferred 100 tokens to second wallet (ATA: 8Fwmf7pVQBk64efnh6QVv8rcueRABwmnm7HjrkzyGsGh)
+- Verified balances: main 900, second 100 ✅
+- Built TypeScript balance reader using @solana/web3.js + @solana/spl-token
+- Balance reader correctly handles 9 decimals (raw ÷ 10^9 = display)
+- Captured 3 Solana Explorer screenshots for building in public
+- Saved metadata to exercises/first-token/metadata/ and config/tokens.devnet.json
+- Issues solved: ATA creation for unfunded wallet (--fund-recipient + --allow-unfunded-recipient), ts-node ESM error (switched to tsx)

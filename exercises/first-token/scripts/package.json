@@ -1,0 +1,21 @@
+{
+  "name": "first-token-scripts",
+  "version": "1.0.0",
+  "description": "TypeScript scripts for Exercise 3: Your First Token",
+  "main": "index.js",
+  "scripts": {
+    "check-balances": "ts-node check-balances.ts",
+    "create-token": "ts-node create-token.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@solana/spl-token": "^0.4.0",
+    "@solana/web3.js": "^1.91.0",
+    "tsx": "^4.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0"
+  }
+}
