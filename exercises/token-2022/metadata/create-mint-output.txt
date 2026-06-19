@@ -1,0 +1,8 @@
+Creating token Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+To initialize metadata inside the mint, please run `spl-token initialize-metadata Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm <YOUR_TOKEN_NAME> <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>`, and sign with the mint authority.
+
+Address:  Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+Decimals:  9
+
+Signature: 2nSep1Pxn5qAWNDy3XCJr6hhAmAAwv2GjkdSCHBh516XHj8zTVVynmK8xd52aNStE7KFzRq1FKiCQuppY3ZNQ5xQ
+

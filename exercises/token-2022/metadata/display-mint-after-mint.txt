@@ -1,0 +1,25 @@
+
+SPL Token Mint
+  Address: Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+  Program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+  Supply: 1000000000000
+  Decimals: 9
+  Mint authority: HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+  Freeze authority: (not set)
+Extensions
+  Transfer fees:
+    Current fee: 100bps
+    Current maximum: 1000000000000000000
+    Config authority: HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+    Withdrawal authority: HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+    Withheld fees: 0
+  Metadata Pointer:
+    Authority: HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+    Metadata address: Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+  Metadata:
+    Update Authority: HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+    Mint: Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+    Name: Bootcamp Token 2022
+    Symbol: BOOT2022
+    URI: https://arweave.net/bootcamp-token-2022-metadata.json
+

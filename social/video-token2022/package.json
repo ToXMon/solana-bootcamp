@@ -1,0 +1,21 @@
+{
+  "name": "token-2022-video",
+  "version": "1.0.0",
+  "description": "Token-2022 with extensions - building in public video for Encode Club Solana Bootcamp",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "remotion render src/index.ts token-2022-video out/token-2022-video.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.391",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.391"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "prettier": "^3.8.4",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,6 @@
+Minting 1000 tokens
+  Token: Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+  Recipient: 6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa
+
+Signature: 2Umz11ei2n2AgKNKucSFb7di7cAcnPVEDfH8uWfBE3aaBqtaNkSneGKUrdKP2AGxjwnbouK9Km3uZSTMtQDZV6rZ
+
