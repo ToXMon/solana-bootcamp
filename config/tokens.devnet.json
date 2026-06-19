@@ -17,5 +17,40 @@
     "createMainAta": "4Ma5FaLwJ6nEYyizS6hYhwEN3XY2AcYbm6cAf91dUFr8ggSUGqJGUBEWU1kU2vUXG1HrRehMpPQH3dDTuZZ47kuT",
     "mintTokens": "5DUzUhzPjKvaHBAJoMohgqnUhQsTTgvHboRsBwPnMnLR2soBmD32qAxpycz1sG5viMHr8bL4RLk4jXX5VYm4Bf45",
     "transfer": "kJ1bUjJte5rcgwLSD9aLm1CjxqydGvTCiFZxdeECSQREDd3uEivTp8o5ZexUjFxyLzVGJcGA5R2UTcto522A5ds"
+  },
+  "token2022": {
+    "mint": "Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm",
+    "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+    "decimals": 9,
+    "cluster": "devnet",
+    "extensions": [
+      "TransferFeeConfig",
+      "MetadataPointer",
+      "TokenMetadata"
+    ],
+    "transferFee": {
+      "basisPoints": 100,
+      "percentage": "1%",
+      "maxFeeRaw": "1000000000000000000"
+    },
+    "metadata": {
+      "name": "Bootcamp Token 2022",
+      "symbol": "BOOT2022",
+      "uri": "https://arweave.net/bootcamp-token-2022-metadata.json"
+    },
+    "mainWalletAta": "6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa",
+    "secondWalletAta": "6wuPowTeW1ngx1SUBEefWYaWGRjhvA7SaeDCUJSW1ree",
+    "mainWalletBalance": 800,
+    "secondWalletBalance": 198,
+    "withheldFeesRaw": "2000000000",
+    "totalSupply": 1000,
+    "createdAt": "2026-06-19",
+    "signatures": {
+      "createMint": "2nSep1Pxn5qAWNDy3XCJr6hhAmAAwv2GjkdSCHBh516XHj8zTVVynmK8xd52aNStE7KFzRq1FKiCQuppY3ZNQ5xQ",
+      "initMetadata": "2RZG2rQqcnVA3eY9ofkiq18CWz6AB5vSeFVno172gTuzn5o3fDda8UTrtqKSuV5iuBeNU8BfgPyM7wLKAW3z5XMQ",
+      "mintTokens": "2Umz11ei2n2AgKNKucSFb7di7cAcnPVEDfH8uWfBE3aaBqtaNkSneGKUrdKP2AGxjwnbouK9Km3uZSTMtQDZV6rZ",
+      "transferWithFee_1": "3KTfYmvroxn27Si7VAPsZc4NBb2jGmGc8FhLXoiEGJJkvSRMfYi5cZ6jwnyPUcx5GBHDREo6BdvsAbdhAGjcW5B1",
+      "transferWithFee_2": "3MNTq9EAPfr4F32fFfGQKz8yA3StqUCSGLNEVoUYD4euUuaDGVAQH8WsBCsC58GsofLy3gdwmU95YVEweH8LijT"
+    }
   }
 }

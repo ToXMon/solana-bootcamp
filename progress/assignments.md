@@ -20,5 +20,13 @@
 - [x] Exercise 3 — Build TypeScript balance reader (tsx, decimals handled)
 - [x] Exercise 3 — Verify all operations on Solana Explorer (3 screenshots)
 
+- [x] Exercise 4 — Token-2022 Extensions: Create mint with TransferFeeConfig + MetadataPointer + TokenMetadata ✅ Mint: `Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm`
+- [x] Exercise 4 — Initialize on-chain metadata (name/symbol/URI)
+- [x] Exercise 4 — Create ATA + mint 1000 tokens on Token-2022 program
+- [x] Exercise 4 — Test transfer fee extension (200 sent, 198 received, 2 withheld = 1%)
+- [x] Exercise 4 — TypeScript extension decoder (unpackMint + getExtensionTypes + getTransferFeeAmount)
+- [x] Exercise 4 — Verify on Solana Explorer (mint + transfer tx + withheld fees)
+- [x] Exercise 4 — Save metadata, explorer links, execution log
+
 ## Weeks 4-6
 *Assignments will be added as course progresses*

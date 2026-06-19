@@ -1,0 +1,68 @@
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+======================================================================
+Exercise 4 — Token-2022 Extension Decoder
+======================================================================
+RPC:        https://api.devnet.solana.com
+Mint:       Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+Program ID: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+
+Account owner:  TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+Account size:   510 bytes
+Executable:     false
+Lamports:       4440480
+
+----------------------------------------------------------------------
+Mint Base Data
+----------------------------------------------------------------------
+Supply:           1000000000000 (1000000000000 raw / 1000 UI)
+Decimals:         9
+Mint authority:   HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+Freeze authority: (not set)
+Is initialized:   true
+
+----------------------------------------------------------------------
+Configured Extensions
+----------------------------------------------------------------------
+Extension count: 2
+  [1] TransferFeeConfig (type id 1)
+  [2] UnknownExtension(33529) (type id 33529)
+
+----------------------------------------------------------------------
+Extension Details
+----------------------------------------------------------------------
+TransferFeeConfig: present but not parsed via unpackMint (manual decode needed)
+
+======================================================================
+Token Accounts
+======================================================================
+
+Main Wallet ATA: 6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa
+  owner program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+  data size:     182 bytes
+  mint:          Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+  owner:         HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx
+  amount (raw):  800000000000
+  amount (ui):   800
+  state:         undefined
+  account extensions: 1
+    - UnknownExtension(27820)
+  withheldFee (raw): 0
+  withheldFee (ui):  0
+
+Second Wallet ATA: 6wuPowTeW1ngx1SUBEefWYaWGRjhvA7SaeDCUJSW1ree
+  owner program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+  data size:     182 bytes
+  mint:          Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm
+  owner:         3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X
+  amount (raw):  198000000000
+  amount (ui):   198
+  state:         undefined
+  account extensions: 1
+    - UnknownExtension(27820)
+  withheldFee (raw): 2000000000
+  withheldFee (ui):  2
+
+======================================================================
+Decoder complete. Verify on Explorer:
+  https://explorer.solana.com/address/Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm?cluster=devnet
+======================================================================

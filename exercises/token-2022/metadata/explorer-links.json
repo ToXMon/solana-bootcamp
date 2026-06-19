@@ -1,0 +1,20 @@
+{
+  "cluster": "devnet",
+  "base": "https://explorer.solana.com",
+  "links": {
+    "mintAccount": "https://explorer.solana.com/address/Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm?cluster=devnet",
+    "mainAta": "https://explorer.solana.com/address/6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa?cluster=devnet",
+    "secondAta": "https://explorer.solana.com/address/6wuPowTeW1ngx1SUBEefWYaWGRjhvA7SaeDCUJSW1ree?cluster=devnet",
+    "mainWallet": "https://explorer.solana.com/address/HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx?cluster=devnet",
+    "secondWallet": "https://explorer.solana.com/address/3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X?cluster=devnet",
+    "transactions": {
+      "createMint": "https://explorer.solana.com/tx/2nSep1Pxn5qAWNDy3XCJr6hhAmAAwv2GjkdSCHBh516XHj8zTVVynmK8xd52aNStE7KFzRq1FKiCQuppY3ZNQ5xQ?cluster=devnet",
+      "initMetadata": "https://explorer.solana.com/tx/2RZG2rQqcnVA3eY9ofkiq18CWz6AB5vSeFVno172gTuzn5o3fDda8UTrtqKSuV5iuBeNU8BfgPyM7wLKAW3z5XMQ?cluster=devnet",
+      "createMainAta": "https://explorer.solana.com/tx/mzpvHTitTmqDhqczBFcvMcenMscTRdGFmFXyfmcAcT6snEcuaZWM5f4xASYxCXdwYbSxBmcWvSHchisRFRY4WY2?cluster=devnet",
+      "mintTokens": "https://explorer.solana.com/tx/2Umz11ei2n2AgKNKucSFb7di7cAcnPVEDfH8uWfBE3aaBqtaNkSneGKUrdKP2AGxjwnbouK9Km3uZSTMtQDZV6rZ?cluster=devnet",
+      "fundSecondWalletSol": "https://explorer.solana.com/tx/5ZFcFnfMu521mKqgwUCfDWC3SLyqgAeZN1nGUepk9367rJSJ9UPvtMvZhQ2nLjfxu8dbnPqT5JVhVDpBG2doHcZw?cluster=devnet",
+      "transferWithFee_1": "https://explorer.solana.com/tx/3KTfYmvroxn27Si7VAPsZc4NBb2jGmGc8FhLXoiEGJJkvSRMfYi5cZ6jwnyPUcx5GBHDREo6BdvsAbdhAGjcW5B1?cluster=devnet",
+      "transferWithFee_2": "https://explorer.solana.com/tx/3MNTq9EAPfr4F32fFfGQKz8yA3StqUCSGLNEVoUYD4euUuaDGVAQH8WsBCsC58GsofLy3gdwmU95YVEweH8LijT?cluster=devnet"
+    }
+  }
+}

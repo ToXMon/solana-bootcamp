@@ -48,3 +48,23 @@
 - Captured 3 Solana Explorer screenshots for building in public
 - Saved metadata to exercises/first-token/metadata/ and config/tokens.devnet.json
 - Issues solved: ATA creation for unfunded wallet (--fund-recipient + --allow-unfunded-recipient), ts-node ESM error (switched to tsx)
+
+### Exercise 4: Token-2022 Extensions ✅ COMPLETE (June 19, 2026)
+- Created Token-2022 mint `Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm` on devnet (program: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
+- Configured 3 extensions at mint creation: TransferFeeConfig (100 bps / 1%), MetadataPointer, TokenMetadata
+- Initialized on-chain metadata: name "Bootcamp Token 2022", symbol "BOOT2022", URI https://arweave.net/bootcamp-token-2022-metadata.json
+- Created main ATA (6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa) and minted 1000 tokens
+- Funded second wallet (3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X) with 0.05 SOL via transfer (airdrop rate-limited)
+- Tested transfer fee: sent 200 tokens across 2 txs, second wallet received 198, 2 withheld (1% fee)
+- Withheld fee verified on-chain: Second ATA shows `Transfer fees withheld: 2000000000` (2 raw tokens)
+- Built TypeScript extension decoder using @solana/spl-token (unpackMint + getExtensionTypes + getTransferFeeAmount)
+- Decoder confirms: 510-byte mint, TransferFeeConfig + MetadataPointer extensions, withheld fee 2 tokens on second ATA
+- Key learnings:
+  - Token-2022 uses program ID TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb (different from classic TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA)
+  - Extensions are PERMANENT — set at create-token time, cannot be added later
+  - ATA derivation must use TOKEN_2022_PROGRAM_ID (pass --program-id flag to spl-token CLI)
+  - Withheld fees accrue on the RECIPIENT token account (TransferFeeAmount extension), not on the mint
+  - --enable-metadata adds both MetadataPointer extension AND reserves space for TokenMetadata TLV
+  - spl-token CLI flags: --transfer-fee-basis-points, --transfer-fee-maximum-fee, --enable-metadata
+  - spl-token 0.4.0 enum maps MetadataPointer to id 33529 (version-specific; display still works correctly)
+- Deliverables: README.md, decode-extensions.ts, token-2022-metadata.json, explorer-links.json, exercise-4-log.md, decoder-output.txt

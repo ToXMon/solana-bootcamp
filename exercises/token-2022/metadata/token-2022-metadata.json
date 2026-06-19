@@ -1,0 +1,51 @@
+{
+  "exercise": "Exercise 4 — Token-2022 Extensions",
+  "mint": "Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm",
+  "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "programName": "SPL Token-2022",
+  "decimals": 9,
+  "cluster": "devnet",
+  "extensions": {
+    "mint": [
+      "TransferFeeConfig",
+      "MetadataPointer",
+      "TokenMetadata"
+    ],
+    "tokenAccount": [
+      "ImmutableOwner",
+      "TransferFeeAmount"
+    ]
+  },
+  "transferFee": {
+    "basisPoints": 100,
+    "percentage": "1%",
+    "maxFeeRaw": "1000000000000000000",
+    "configAuthority": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+    "withdrawalAuthority": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx"
+  },
+  "metadata": {
+    "name": "Bootcamp Token 2022",
+    "symbol": "BOOT2022",
+    "uri": "https://arweave.net/bootcamp-token-2022-metadata.json",
+    "updateAuthority": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+    "metadataAddress": "Cc57DfMQiZzMQ77boNZQGbHGnHLuKnkcDRxQuVBRzqrm"
+  },
+  "wallets": {
+    "main": {
+      "address": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+      "ata": "6fsRkKavjzLGLxTcea5B7SXmwWDfJbCttVp1z55dPySa",
+      "balance": 800
+    },
+    "second": {
+      "address": "3JiDfKBfEo9xqSHr2G4zEtbvGz25LeEZ8fXLsHUZR57X",
+      "ata": "6wuPowTeW1ngx1SUBEefWYaWGRjhvA7SaeDCUJSW1ree",
+      "balance": 198,
+      "withheldFeesRaw": "2000000000"
+    }
+  },
+  "totalSupply": 1000,
+  "totalSupplyRaw": "1000000000000",
+  "mintAuthority": "HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx",
+  "freezeAuthority": null,
+  "createdAt": "2026-06-19"
+}
