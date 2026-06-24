@@ -1,0 +1,503 @@
+{
+  "address": "8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG",
+  "metadata": {
+    "name": "proposal_state_machine",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Proposal State Machine - Exercise 5"
+  },
+  "docs": [
+    "Proposal state machine: Draft → Active → Closed",
+    "- Draft: initial state, creator can activate or cancel (close)",
+    "- Active: anyone can vote, creator can close",
+    "- Closed: terminal state, no further actions"
+  ],
+  "instructions": [
+    {
+      "name": "activate",
+      "docs": [
+        "Activates a proposal, transitioning from Draft → Active.",
+        "Only the creator can call this. State must be Draft."
+      ],
+      "discriminator": [
+        194,
+        203,
+        35,
+        100,
+        151,
+        55,
+        170,
+        82
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.proposal_id",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "proposal"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close",
+      "docs": [
+        "Closes a proposal, transitioning from Draft or Active → Closed.",
+        "Only the creator can call this.",
+        "- Draft → Closed: cancel (creator backs out before voting starts)",
+        "- Active → Closed: normal close (voting ended)"
+      ],
+      "discriminator": [
+        98,
+        165,
+        201,
+        177,
+        108,
+        65,
+        206,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.proposal_id",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "proposal"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_proposal",
+      "docs": [
+        "Creates a new proposal in Draft state.",
+        "Reads the current counter value as the proposal_id, then increments the counter.",
+        "Anyone can call this instruction.",
+        "Seeds: ProposalCounter [b\"proposal_counter\"], Proposal [b\"proposal\", creator, proposal_id]"
+      ],
+      "discriminator": [
+        132,
+        116,
+        68,
+        174,
+        216,
+        160,
+        198,
+        22
+      ],
+      "accounts": [
+        {
+          "name": "counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "account",
+                "path": "counter.count",
+                "account": "ProposalCounter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "vote",
+      "docs": [
+        "Casts a vote on an Active proposal.",
+        "Anyone can call this. Creates a VoteRecord PDA that prevents double voting.",
+        "Seeds: VoteRecord [b\"vote\", proposal, voter]"
+      ],
+      "discriminator": [
+        227,
+        110,
+        155,
+        23,
+        136,
+        126,
+        172,
+        25
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "proposal.creator",
+                "account": "Proposal"
+              },
+              {
+                "kind": "account",
+                "path": "proposal.proposal_id",
+                "account": "Proposal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vote_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "proposal"
+              },
+              {
+                "kind": "account",
+                "path": "voter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vote_yes",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Proposal",
+      "discriminator": [
+        26,
+        94,
+        189,
+        187,
+        116,
+        136,
+        53,
+        33
+      ]
+    },
+    {
+      "name": "ProposalCounter",
+      "discriminator": [
+        110,
+        92,
+        147,
+        182,
+        142,
+        28,
+        182,
+        5
+      ]
+    },
+    {
+      "name": "VoteRecord",
+      "discriminator": [
+        112,
+        9,
+        123,
+        165,
+        234,
+        9,
+        157,
+        167
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Only the creator can perform this action"
+    },
+    {
+      "code": 6001,
+      "name": "NotDraft",
+      "msg": "Proposal is not in Draft state"
+    },
+    {
+      "code": 6002,
+      "name": "NotActive",
+      "msg": "Proposal is not in Active state"
+    },
+    {
+      "code": 6003,
+      "name": "AlreadyClosed",
+      "msg": "Proposal is already closed"
+    },
+    {
+      "code": 6004,
+      "name": "TitleTooLong",
+      "msg": "Title exceeds maximum length of 64 characters"
+    }
+  ],
+  "types": [
+    {
+      "name": "Proposal",
+      "docs": [
+        "Proposal account: stores all proposal data.",
+        "Space: 8 (discriminator) + 32 (creator) + 8 (proposal_id) + 4+64 (title) + 1 (state) + 8 (yes_votes) + 8 (no_votes) + 1 (bump) = 134"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "proposal_id",
+            "type": "u64"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "type": {
+              "defined": {
+                "name": "ProposalState"
+              }
+            }
+          },
+          {
+            "name": "yes_votes",
+            "type": "u64"
+          },
+          {
+            "name": "no_votes",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProposalCounter",
+      "docs": [
+        "Global counter for auto-incrementing proposal IDs.",
+        "Space: 8 (discriminator) + 8 (count) + 1 (bump) = 17"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProposalState",
+      "docs": [
+        "Proposal state enum for the state machine."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Draft"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Closed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteRecord",
+      "docs": [
+        "Vote record: one per voter per proposal, prevents double voting.",
+        "Space: 8 (discriminator) + 32 (proposal) + 32 (voter) + 1 (vote_yes) + 1 (bump) = 74"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "proposal",
+            "type": "pubkey"
+          },
+          {
+            "name": "voter",
+            "type": "pubkey"
+          },
+          {
+            "name": "vote_yes",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

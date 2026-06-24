@@ -28,5 +28,14 @@
 - [x] Exercise 4 — Verify on Solana Explorer (mint + transfer tx + withheld fees)
 - [x] Exercise 4 — Save metadata, explorer links, execution log
 
-## Weeks 4-6
+## Week 4: Programs & Frontend
+- [x] Exercise 5 — Proposal State Machine: Build a proposal/voting program with guarded `Draft → Active → Closed` transitions. Instructions: `create_proposal`, `activate`, `vote`, `close`. Creator-only authority for activation and closing. Deploy to devnet and verify on Solana Explorer. ✅ Program ID: `8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG` on devnet, 9/9 tests passing
+- [x] Exercise 6 — Tip Jar CPI: Build a tip jar using CPI to the System Program. Implement user deposits with `invoke` and owner-only PDA withdrawals with `invoke_signed`. Deploy to devnet and verify. ✅ Program ID: `7BjcqxB1gqyudc5vY3yBrvxuNfktUi8RcpDc8wN77P7H` on devnet, 7/7 tests passing
+- [x] Exercise 7 — Full Dapp Flow: Build a React frontend with Solana wallet adapter integration. Implement on-chain reads, signed transaction submission, wallet signing, and UI state refresh on devnet. ✅ Created StateBadge, ProposalCard, ProposalList components; updated App.tsx with header + proposal list layout; builds clean (tsc + vite build pass)
+- [ ] Verify all Week 4 deployments on Solana Explorer
+- [ ] Successfully run tests for Exercises 5 and 6
+
+## Weeks 5-6
 *Assignments will be added as course progresses*
+
+- [x] Full dApp Flow — Create proposal form component integrated above proposal list and verified with `npm run build` on 2026-06-23.

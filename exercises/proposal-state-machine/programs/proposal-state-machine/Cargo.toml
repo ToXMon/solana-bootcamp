@@ -1,0 +1,21 @@
+[package]
+name = "proposal-state-machine"
+version = "0.1.0"
+description = "Proposal State Machine - Exercise 5"
+edition = "2021"
+rust-version = "1.79.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "proposal_state_machine"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "0.31.0", features = ["init-if-needed"] }

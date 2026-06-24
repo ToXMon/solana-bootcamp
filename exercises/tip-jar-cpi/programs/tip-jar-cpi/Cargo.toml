@@ -1,0 +1,21 @@
+[package]
+name = "tip-jar-cpi"
+version = "0.1.0"
+description = "Tip Jar CPI - Exercise 6"
+edition = "2021"
+rust-version = "1.79.0"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "tip_jar_cpi"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "0.31.0"
