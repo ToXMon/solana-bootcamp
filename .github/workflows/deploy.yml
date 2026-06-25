@@ -10,28 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: exercises/full-dapp-flow/package-lock.json
 
-      - name: Install dependencies
-        working-directory: exercises/full-dapp-flow
-        run: npm install
-
-      - name: Build
+      - name: Install and Build
         working-directory: exercises/full-dapp-flow
         env:
           VITE_RPC_ENDPOINT: https://api.devnet.solana.com
           VITE_PROGRAM_ID: 8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG
           VITE_NETWORK: devnet
-        run: npm run build
+        run: |
+          npm install
+          npm run build
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: exercises/full-dapp-flow
-          command: pages deploy dist/ --project-name proposal-dapp
+        working-directory: exercises/full-dapp-flow
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler pages deploy dist/ --project-name proposal-dapp
