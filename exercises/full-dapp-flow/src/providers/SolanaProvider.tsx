@@ -16,10 +16,8 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
   const endpoint = useMemo(() => DEVNET_RPC, []);
 
   return (
-    // @ts-expect-error – @solana/wallet-adapter-react v0.15.x FC return type incompatibility with React 18 types
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
-        {/* @ts-expect-error – @solana/wallet-adapter-react-ui v0.9.x FC return type incompatibility */}
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
