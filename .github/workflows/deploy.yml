@@ -3,8 +3,6 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
-    paths:
-      - 'exercises/full-dapp-flow/**'
   workflow_dispatch:
 
 jobs:
