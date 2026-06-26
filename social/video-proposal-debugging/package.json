@@ -1,0 +1,21 @@
+{
+  "name": "proposal-debugging-video",
+  "version": "1.0.0",
+  "description": "Proposal dApp debugging - building in public video for Encode Club Solana Bootcamp",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "build": "remotion render src/index.ts proposal-debugging-video out/proposal-debugging-video.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.391",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.391"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "prettier": "^3.8.4",
+    "typescript": "5.9.2"
+  }
+}
