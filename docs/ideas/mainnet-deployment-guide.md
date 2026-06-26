@@ -5,7 +5,7 @@
 The proposal-voting dApp was deployed to Cloudflare Workers as a static SPA for the bootcamp. Two issues surfaced during that deployment that are *fine for devnet/bootcamp* but **must be fixed before mainnet**:
 
 1. **`Buffer` polyfill missing** — app rendered blank in Safari/Brave because `@solana/web3.js` / `@coral-xyz/anchor` use Node's `Buffer` and Vite doesn't polyfill it by default. Chrome only worked because the Phantom extension injects `window.Buffer` into every page.
-2. **RPC API key baked into the public JS bundle** — the Helius devnet key is hardcoded as a fallback in `src/constants.ts` and shipped in the static bundle. Anyone can extract it from the browser and exhaust your quota or, if it ever has mainnet write access, drain funds.
+2. **RPC API keys must not be baked into the public JS bundle** — any endpoint configured with `VITE_RPC_ENDPOINT` is shipped in the static bundle. Anyone can extract a browser-exposed key and exhaust your quota or, if it ever has mainnet write access, drain funds.
 
 This guide covers the production/mainnet fixes, with emphasis on the **server-side RPC proxy** pattern (the thing the bootcamp explicitly flagged as "unlikely to be necessary for devnet but required for mainnet").
 
@@ -16,7 +16,7 @@ This guide covers the production/mainnet fixes, with emphasis on the **server-si
 | Dimension | Devnet (current) | Mainnet (production) |
 |---|---|---|
 | RPC endpoint | Public `api.devnet.solana.com` or Helius devnet free tier | Paid Helius/QuickNode/Triton mainnet endpoint — **never public mainnet** (rate-limited, no CORS, no SLA) |
-| RPC API key | OK to ship in client bundle (devnet tokens are worthless) | **Must not** ship in client bundle — proxy through a server |
+| RPC API key | Prefer no key or a browser-restricted devnet key only | **Must not** ship in client bundle — proxy through a server |
 | `Buffer` polyfill | Required (fixed via `vite-plugin-node-polyfills`) | Same — still required |
 | Wallet network | Phantom/Solflare set to devnet | Phantom/Solflare set to mainnet (user-controlled, not your code) |
 | Program ID | Devnet program ID | Mainnet program ID (different — redeploy program to mainnet first) |
@@ -26,7 +26,7 @@ This guide covers the production/mainnet fixes, with emphasis on the **server-si
 | Monitoring | None | Uptime + RPC error rate + tx success rate alerts |
 | Rate limiting | None | Per-IP rate limit on your proxy to prevent abuse of your paid RPC quota |
 | CSP | Loose | Strict — `default-src 'self'; connect-src` limited to your proxy + wallet RPC domains |
-| Secrets in repo | Helius devnet key in `constants.ts` (acceptable) | **No keys in repo** — all secrets in server env vars |
+| Secrets in repo | No committed RPC keys; optional browser-exposed devnet endpoint via env | **No keys in repo** — all secrets in server env vars |
 
 ---
 
