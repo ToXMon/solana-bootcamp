@@ -32,7 +32,11 @@ function decodeProposal(data: Buffer) {
   const titleLen = data.readUInt32LE(offset); offset += 4
   const title = data.subarray(offset, offset + titleLen).toString('utf8'); offset += titleLen
   const stateByte = data.readUInt8(offset); offset += 1
-  const state = stateByte === 0 ? { draft: {} } : stateByte === 1 ? { active: {} } : { closed: {} }
+  const state = {
+    draft: stateByte === 0 ? {} : null,
+    active: stateByte === 1 ? {} : null,
+    closed: stateByte === 2 ? {} : null,
+  }
   const yes_votes = new BN(data.subarray(offset, offset + 8), 'le'); offset += 8
   const no_votes = new BN(data.subarray(offset, offset + 8), 'le'); offset += 8
   const bump = data.readUInt8(offset)
