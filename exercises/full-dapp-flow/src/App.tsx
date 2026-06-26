@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SolanaProvider } from './providers/SolanaProvider'
-import { CreateProposalForm, ProposalList, WalletButton } from './components'
+import { CreateProposalForm, ProposalCard, WalletButton } from './components'
 
 function App() {
   const [proposalListKey, setProposalListKey] = useState(0)
@@ -19,7 +19,7 @@ function App() {
               <CreateProposalForm onSuccess={() => setProposalListKey((key) => key + 1)} />
             </section>
           </div>
-          <ProposalList key={proposalListKey} />
+          <ProposalCard key={proposalListKey} refetch={() => setProposalListKey((key) => key + 1)} />
         </div>
       </div>
     </SolanaProvider>

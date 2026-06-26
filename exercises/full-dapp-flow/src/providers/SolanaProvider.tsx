@@ -16,8 +16,10 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
   const endpoint = useMemo(() => DEVNET_RPC, []);
 
   return (
+    // @ts-ignore — @solana/wallet-adapter-react v0.15 FC return type is incompatible with React 18 types when @types/react 19 leaks into the hoist via react-native peer deps. Silent when unused (pinned local install), suppresses in CI.
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
+        {/* @ts-ignore — same root cause for WalletModalProvider. */}
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

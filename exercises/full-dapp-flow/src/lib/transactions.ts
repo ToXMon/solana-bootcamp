@@ -1,7 +1,6 @@
 import { PublicKey, SystemProgram } from '@solana/web3.js'
+import { PROGRAM_ID } from '../constants'
 import { getProposalCounterPda, getProposalPda, getVoteRecordPda } from './pdas'
-
-const PROGRAM_ID = new PublicKey('8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG')
 
 export async function createProposal(program: any, title: string): Promise<string> {
   const wallet = program.provider.wallet
@@ -24,7 +23,7 @@ export async function createProposal(program: any, title: string): Promise<strin
 
   return await program.methods
     .createProposal(title)
-    .accounts({
+    .accountsStrict({
       counter: counterPda,
       proposal: proposalPda,
       creator: creator,

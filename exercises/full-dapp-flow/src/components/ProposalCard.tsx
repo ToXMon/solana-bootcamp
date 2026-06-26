@@ -7,6 +7,7 @@ import { useProgram, fetchAllProposals, activateProposal, closeProposal } from '
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { ExplorerLink } from './ExplorerLink';
+import { VoteDialog } from './VoteDialog';
 
 interface ProposalAccount {
   creator: PublicKey;
@@ -46,6 +47,7 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
   const [pendingTx, setPendingTx] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState<{ type: 'activate' | 'close' | 'cancel'; proposal: Proposal } | null>(null);
+  const [voteTarget, setVoteTarget] = useState<Proposal | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
 
   const loadProposals = useCallback(async () => {
@@ -284,16 +286,29 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
                   </Button>
                 </>
               )}
-              {state === 'active' && isCreator && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => openDialog('close', proposal)}
-                  disabled={isPending}
-                >
-                  {isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-                  {isPending ? 'Closing...' : 'Close'}
-                </Button>
+              {state === 'active' && (
+                <>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-indigo-600 hover:bg-indigo-700"
+                    onClick={() => setVoteTarget(proposal)}
+                    disabled={isPending}
+                  >
+                    Vote
+                  </Button>
+                  {isCreator && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => openDialog('close', proposal)}
+                      disabled={isPending}
+                    >
+                      {isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+                      {isPending ? 'Closing...' : 'Close'}
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -322,6 +337,16 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Vote Dialog */}
+      {voteTarget && (
+        <VoteDialog
+          proposal={{ title: voteTarget.account.title, pda: voteTarget.publicKey }}
+          isOpen={!!voteTarget}
+          onClose={() => setVoteTarget(null)}
+          onVoted={() => loadProposals()}
+        />
+      )}
     </div>
   );
 }
