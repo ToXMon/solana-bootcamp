@@ -1,5 +1,6 @@
 export { CreateProposalForm } from './CreateProposalForm'
 export { ProposalList } from './ProposalList'
+export { ProposalCard } from './ProposalCard'
 export { WalletButton } from './WalletButton'
 export { VoteDialog } from './VoteDialog'
 export { useProposal } from '../hooks/useProposal'
