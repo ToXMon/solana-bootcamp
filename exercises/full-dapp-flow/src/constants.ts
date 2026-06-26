@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 
 const DEFAULT_PROGRAM_ID = '8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG'
-const DEFAULT_DEVNET_RPC = 'https://api.devnet.solana.com'
+const DEFAULT_DEVNET_RPC = 'https://devnet.helius-rpc.com/?api-key=03344434-a031-4c5a-bd91-e37218586d44'
 
 const configuredProgramId = import.meta.env.VITE_PROGRAM_ID?.trim() || DEFAULT_PROGRAM_ID
 const configuredRpcEndpoint = import.meta.env.VITE_RPC_ENDPOINT?.trim() || DEFAULT_DEVNET_RPC

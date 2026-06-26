@@ -5,24 +5,20 @@ const VOTE_RECORD_DISCRIMINATOR = Buffer.from([112, 9, 123, 165, 234, 9, 157, 16
 export async function fetchAllProposals(program: any) {
   try {
     const connection = program.provider.connection
-    // Public devnet RPC (api.devnet.solana.com) rejects getProgramAccounts with
-    // memcmp filters (INVALID_PARAMS_WITH_MESSAGE). Fetch all accounts unfiltered
-    // and discriminate client-side by the first 8 bytes.
-    // Use base64 encoding so account.data is always a predictable string format.
-    const accounts = await connection.getProgramAccounts(program.programId, {
-      encoding: 'base64',
-    })
+    // Public devnet RPC rejects getProgramAccounts with memcmp filters.
+// Fetch all accounts unfiltered — web3.js v1 returns account.data as a native Buffer
+// when no encoding is specified — then filter client-side by discriminator.
+    const accounts = await connection.getProgramAccounts(program.programId)
     return accounts
       .filter((acc: any) => {
-        const data = Buffer.from(acc.account.data, 'base64')
+        const data = Buffer.isBuffer(acc.account.data)
+          ? acc.account.data
+          : Buffer.from(acc.account.data)
         return data.length >= 8 && data.slice(0, 8).equals(PROPOSAL_DISCRIMINATOR)
       })
       .map((acc: any) => ({
         publicKey: acc.pubkey,
-        account: program.coder.accounts.decode(
-          'Proposal',
-          Buffer.from(acc.account.data, 'base64'),
-        ),
+        account: program.coder.accounts.decode('Proposal', acc.account.data),
       }))
   } catch (err) {
     console.error('fetchAllProposals failed:', err)
@@ -33,20 +29,17 @@ export async function fetchAllProposals(program: any) {
 export async function fetchAllVoteRecords(program: any) {
   try {
     const connection = program.provider.connection
-    const accounts = await connection.getProgramAccounts(program.programId, {
-      encoding: 'base64',
-    })
+    const accounts = await connection.getProgramAccounts(program.programId)
     return accounts
       .filter((acc: any) => {
-        const data = Buffer.from(acc.account.data, 'base64')
+        const data = Buffer.isBuffer(acc.account.data)
+          ? acc.account.data
+          : Buffer.from(acc.account.data)
         return data.length >= 8 && data.slice(0, 8).equals(VOTE_RECORD_DISCRIMINATOR)
       })
       .map((acc: any) => ({
         publicKey: acc.pubkey,
-        account: program.coder.accounts.decode(
-          'VoteRecord',
-          Buffer.from(acc.account.data, 'base64'),
-        ),
+        account: program.coder.accounts.decode('VoteRecord', acc.account.data),
       }))
   } catch (err) {
     console.error('fetchAllVoteRecords failed:', err)
