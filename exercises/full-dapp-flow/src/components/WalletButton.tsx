@@ -76,7 +76,7 @@ export function WalletButton() {
         <div
           role="menu"
           aria-label="Wallet menu"
-          className="absolute right-0 mt-2 w-64 rounded-lg border border-border bg-surface shadow-terminal overflow-hidden"
+          className="absolute left-0 right-auto z-50 mt-2 w-64 rounded-lg border border-border bg-surface shadow-terminal overflow-hidden sm:right-0 sm:left-auto"
         >
           <div className="px-4 py-3 border-b border-border">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">

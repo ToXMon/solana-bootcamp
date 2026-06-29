@@ -9,7 +9,7 @@ function App() {
     <SolanaProvider>
       <div className="min-h-screen bg-background text-foreground">
         <div className="max-w-6xl mx-auto px-4 py-8 md:px-6 md:py-12">
-          <header className="flex flex-col gap-6 mb-10 md:flex-row md:items-end md:justify-between">
+          <header className="relative z-50 flex flex-col gap-6 mb-10 md:flex-row md:items-end md:justify-between">
             <div className="space-y-2">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
                 solana/devnet
