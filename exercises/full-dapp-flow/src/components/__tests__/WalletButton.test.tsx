@@ -29,13 +29,13 @@ describe('WalletButton', () => {
   it('opens the wallet modal when disconnected', () => {
     render(<WalletButton />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Connect Wallet' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Connect wallet' }))
 
     expect(setVisible).toHaveBeenCalledWith(true)
     expect(disconnect).not.toHaveBeenCalled()
   })
 
-  it('renders the connected wallet and disconnects on click', () => {
+  it('renders the connected wallet and disconnects via dropdown', () => {
     walletState = {
       connected: true,
       publicKey: new PublicKey('HnzAHTLny7JdWacKbWHmYhs66Yq4cEhUiiPUDvjJLYnx'),
@@ -44,7 +44,11 @@ describe('WalletButton', () => {
 
     render(<WalletButton />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'HnzA..LYnx' }))
+    // Open the dropdown
+    fireEvent.click(screen.getByRole('button', { name: /Connected wallet.*Open wallet menu/ }))
+
+    // Click Disconnect menu item
+    fireEvent.click(screen.getByRole('menuitem', { name: /Disconnect/ }))
 
     expect(disconnect).toHaveBeenCalledOnce()
     expect(setVisible).not.toHaveBeenCalled()
@@ -55,6 +59,6 @@ describe('WalletButton', () => {
 
     render(<WalletButton />)
 
-    expect(screen.getByRole('button', { name: 'Connecting...' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Connect wallet' })).toBeDisabled()
   })
 })

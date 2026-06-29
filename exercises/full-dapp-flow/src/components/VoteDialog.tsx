@@ -38,8 +38,8 @@ export function VoteDialog({ proposal, isOpen, onClose, onVoted }: VoteDialogPro
       const txsig = await voteProposal(program, proposal.pda, voteYes)
       const explorerUrl = `https://explorer.solana.com/tx/${txsig}?cluster=devnet`
       const toast = document.createElement('div')
-      toast.className = 'fixed bottom-4 right-4 z-[100] bg-green-900 border border-green-700 text-green-100 px-4 py-3 rounded-lg shadow-lg max-w-md text-sm'
-      toast.innerHTML = `Vote submitted! View on Explorer: <a href="${explorerUrl}" target="_blank" rel="noopener noreferrer" class="underline text-green-300">${txsig.slice(0, 8)}...${txsig.slice(-4)}</a>`
+      toast.className = 'fixed bottom-4 right-4 z-[100] bg-success border border-success text-accent-ink px-4 py-3 rounded-lg shadow-terminal max-w-md text-sm'
+      toast.innerHTML = `Vote submitted! View on Explorer: <a href="${explorerUrl}" target="_blank" rel="noopener noreferrer" class="underline">${txsig.slice(0, 8)}...${txsig.slice(-4)}</a>`
       document.body.appendChild(toast)
       setTimeout(() => toast.remove(), 8000)
       onVoted()
@@ -58,14 +58,14 @@ export function VoteDialog({ proposal, isOpen, onClose, onVoted }: VoteDialogPro
         <DialogHeader>
           <DialogTitle id="vote-dialog-title">Cast Vote</DialogTitle>
           <DialogDescription>
-            <p id="vote-description" className="text-sm text-gray-400 mt-1">
+            <p id="vote-description" className="text-sm text-muted mt-1">
               {proposal.title}
             </p>
           </DialogDescription>
         </DialogHeader>
 
         {error && (
-          <div className="bg-red-900/50 border border-red-700 text-red-200 px-3 py-2 rounded text-sm" role="alert">
+          <div className="bg-destructive/10 border border-destructive/40 text-destructive px-3 py-2 rounded text-sm" role="alert">
             {error}
           </div>
         )}
@@ -74,7 +74,7 @@ export function VoteDialog({ proposal, isOpen, onClose, onVoted }: VoteDialogPro
           <Button
             ref={firstVoteRef as any}
             variant="default"
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-success text-accent-ink hover:brightness-110"
             onClick={() => handleVote(true)}
             disabled={pending}
             aria-label="Vote yes on proposal"
@@ -97,8 +97,8 @@ export function VoteDialog({ proposal, isOpen, onClose, onVoted }: VoteDialogPro
             Cancel
           </Button>
           {pending && (
-            <span className="text-sm text-gray-400 flex items-center gap-1.5 ml-2">
-              <span className="inline-block h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+            <span className="text-sm text-muted flex items-center gap-1.5 ml-2">
+              <span className="inline-block h-4 w-4 border-2 border-muted border-t-transparent rounded-full animate-spin" aria-hidden="true" />
               Submitting...
             </span>
           )}

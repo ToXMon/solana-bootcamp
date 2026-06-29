@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import { BN } from '@coral-xyz/anchor';
-import { Loader2, ThumbsUp, ThumbsDown, AlertCircle, RefreshCw, ClipboardList } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, AlertCircle, RefreshCw, ClipboardList, Loader2 } from 'lucide-react';
 import { useProgram, fetchAllProposals, activateProposal, closeProposal } from '../lib';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { ExplorerLink } from './ExplorerLink';
 import { VoteDialog } from './VoteDialog';
+import { StateBadge } from './StateBadge';
 
 interface ProposalAccount {
   creator: PublicKey;
@@ -139,20 +140,24 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
     return (
       <div className="space-y-3" role="status" aria-label="Loading proposals">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-gray-800 border border-gray-700 rounded-lg p-4 animate-pulse">
+          <div
+            key={i}
+            className="terminal-panel rounded-lg p-4 animate-pulse"
+            aria-hidden="true"
+          >
             <div className="flex justify-between mb-3">
-              <div className="h-4 bg-gray-700 rounded w-3/5" />
-              <div className="h-5 bg-gray-700 rounded-full w-16" />
+              <div className="h-4 bg-surface-2 rounded w-3/5" />
+              <div className="h-5 bg-surface-2 rounded-full w-16" />
             </div>
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
-                <div className="h-3 bg-gray-700 rounded w-12" />
-                <div className="h-3 bg-gray-700 rounded w-8" />
+                <div className="h-3 bg-surface-2 rounded w-12" />
+                <div className="h-3 bg-surface-2 rounded w-8" />
               </div>
-              <div className="h-2 bg-gray-700 rounded-full w-full" />
+              <div className="h-2 bg-surface-2 rounded-full w-full" />
             </div>
             <div className="flex gap-2">
-              <div className="h-9 bg-gray-700 rounded-md w-24" />
+              <div className="h-9 bg-surface-2 rounded-md w-24" />
             </div>
           </div>
         ))}
@@ -165,10 +170,10 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
   if (viewState === 'error') {
     return (
       <div role="alert" className="flex flex-col items-center gap-3 py-8 text-center">
-        <AlertCircle className="h-10 w-10 text-red-400" aria-hidden="true" />
+        <AlertCircle className="h-10 w-10 text-destructive" aria-hidden="true" />
         <div>
-          <h3 className="text-sm font-medium text-red-300">Failed to load proposals</h3>
-          <p className="text-xs text-gray-500 mt-1 max-w-xs">{error}</p>
+          <h3 className="text-sm font-medium text-destructive">Failed to load proposals</h3>
+          <p className="text-xs text-muted mt-1 max-w-xs">{error}</p>
         </div>
         <Button variant="outline" size="sm" onClick={loadProposals}>
           <RefreshCw className="h-3 w-3 mr-1" aria-hidden="true" />
@@ -182,10 +187,12 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
   if (viewState === 'empty') {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <ClipboardList className="h-14 w-14 text-gray-600" aria-hidden="true" />
+        <ClipboardList className="h-14 w-14 text-muted" aria-hidden="true" />
         <div>
-          <h3 className="text-base font-semibold text-gray-300">No proposals yet</h3>
-          <p className="text-sm text-gray-500 mt-1">Create one to get started!</p>
+          <h3 className="text-base font-semibold text-foreground">No proposals yet</h3>
+          <p className="text-sm text-muted mt-1">
+            Create one from the sidebar to get started.
+          </p>
         </div>
       </div>
     );
@@ -198,10 +205,10 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-sm font-medium transition-all ${
+          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-terminal text-sm font-medium transition-all ease-expo ${
             toast.type === 'success'
-              ? 'bg-green-600 text-white'
-              : 'bg-red-600 text-white'
+              ? 'bg-success text-accent-ink'
+              : 'bg-destructive text-destructive-foreground'
           }`}
           role="alert"
         >
@@ -217,45 +224,35 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
         const yesCount = proposal.account.yes_votes.toNumber();
         const noCount = proposal.account.no_votes.toNumber();
 
-        const stateStyles: Record<string, string> = {
-          draft: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
-          active: 'bg-green-500/20 text-green-400 border-green-500/50',
-          closed: 'bg-gray-500/20 text-gray-400 border-gray-500/50',
-        };
-
         return (
           <div
             key={proposal.publicKey.toBase58()}
-            className={`bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-3 transition-opacity ${isPending ? 'opacity-60' : ''}`}
+            className={`terminal-panel rounded-lg p-4 space-y-3 transition-opacity ease-expo ${isPending ? 'opacity-60' : ''}`}
             role="article"
             aria-label={`Proposal: ${proposal.account.title}`}
             aria-busy={isPending}
           >
             {/* Header */}
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-gray-100">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1 min-w-0">
+                <h3 className="text-lg font-semibold text-foreground break-words">
                   {proposal.account.title}
                 </h3>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   Creator:{' '}
                   <ExplorerLink type="account" value={proposal.account.creator.toBase58()} />
                 </p>
               </div>
-              <span
-                className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${stateStyles[state]}`}
-              >
-                {state.charAt(0).toUpperCase() + state.slice(1)}
-              </span>
+              <StateBadge state={{ [state]: {} } as any} />
             </div>
 
             {/* Vote counts */}
             <div className="flex items-center gap-4 text-sm">
-              <span className="flex items-center gap-1 text-green-400">
+              <span className="flex items-center gap-1 text-success">
                 <ThumbsUp className="h-4 w-4" aria-hidden="true" />
                 {yesCount}
               </span>
-              <span className="flex items-center gap-1 text-red-400">
+              <span className="flex items-center gap-1 text-destructive">
                 <ThumbsDown className="h-4 w-4" aria-hidden="true" />
                 {noCount}
               </span>
@@ -268,7 +265,6 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
                   <Button
                     variant="default"
                     size="sm"
-                    className="bg-green-600 hover:bg-green-700"
                     onClick={() => openDialog('activate', proposal)}
                     disabled={isPending}
                   >
@@ -291,7 +287,6 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
                   <Button
                     variant="default"
                     size="sm"
-                    className="bg-indigo-600 hover:bg-indigo-700"
                     onClick={() => setVoteTarget(proposal)}
                     disabled={isPending}
                   >
@@ -329,7 +324,7 @@ export function ProposalCard({ refetch: externalRefetch }: ProposalCardProps) {
             <Button
               variant="default"
               size="sm"
-              className={dialogAction?.type === 'activate' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
+              className={dialogAction?.type === 'activate' ? 'bg-success text-accent-ink hover:brightness-110' : 'bg-destructive text-destructive-foreground hover:brightness-110'}
               onClick={handleConfirmAction}
             >
               Confirm

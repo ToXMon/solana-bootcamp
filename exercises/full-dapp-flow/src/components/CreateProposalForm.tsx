@@ -116,11 +116,11 @@ export function CreateProposalForm({ onSuccess }: CreateProposalFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full rounded-xl border border-gray-800 bg-gray-950 p-5 shadow-lg shadow-black/20"
+      className="w-full space-y-3"
       aria-label="Create proposal form"
     >
       <div className="space-y-2">
-        <label htmlFor="proposal-title" className="block text-sm font-medium text-gray-200">
+        <label htmlFor="proposal-title" className="block text-sm font-medium text-foreground/90">
           Proposal title
         </label>
         <input
@@ -133,9 +133,9 @@ export function CreateProposalForm({ onSuccess }: CreateProposalFormProps) {
           aria-label="Proposal title"
           aria-describedby="proposal-title-count"
           disabled={isPending}
-          className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder:text-gray-500 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted/70 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
         />
-        <p id="proposal-title-count" className="text-sm text-gray-400">
+        <p id="proposal-title-count" className="font-mono text-xs text-muted">
           {title.length}/{MAX_TITLE_LENGTH}
         </p>
       </div>
@@ -144,10 +144,10 @@ export function CreateProposalForm({ onSuccess }: CreateProposalFormProps) {
         type="submit"
         disabled={!canSubmit}
         aria-label={!connected ? 'Connect wallet to create proposal' : 'Create proposal'}
-        className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition ${
+        className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition ease-expo ${
           canSubmit
-            ? 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-950'
-            : 'cursor-not-allowed bg-gray-800 text-gray-400'
+            ? 'bg-primary text-primary-foreground hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background'
+            : 'cursor-not-allowed bg-surface-2 text-muted'
         }`}
       >
         {isPending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
@@ -158,10 +158,10 @@ export function CreateProposalForm({ onSuccess }: CreateProposalFormProps) {
         <div
           role="status"
           aria-live="polite"
-          className={`mt-4 rounded-lg border px-4 py-3 text-sm ${
+          className={`rounded-lg border px-4 py-3 text-sm ${
             status.type === 'success'
-              ? 'border-green-900/60 bg-green-950/40 text-green-400'
-              : 'border-red-900/60 bg-red-950/40 text-red-400'
+              ? 'border-success/40 bg-success/10 text-success'
+              : 'border-destructive/40 bg-destructive/10 text-destructive'
           }`}
         >
           <p>{status.message}</p>
@@ -170,7 +170,7 @@ export function CreateProposalForm({ onSuccess }: CreateProposalFormProps) {
               href={`https://explorer.solana.com/tx/${status.signature}?cluster=devnet`}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 inline-block break-all text-green-300 underline underline-offset-4 hover:text-green-200"
+              className="mt-2 inline-block break-all text-success underline underline-offset-4 hover:brightness-125"
               aria-label="View proposal transaction on Solana Explorer"
             >
               View on Solana Explorer: {status.signature}

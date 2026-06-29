@@ -8,13 +8,13 @@ interface StateBadgeProps {
 
 function resolveState(state: ProposalState): { label: string; icon: typeof FileEdit; colorClasses: string } {
   if ('draft' in state) {
-    return { label: 'Draft', icon: FileEdit, colorClasses: 'bg-yellow-900/50 text-yellow-300 border-yellow-600' };
+    return { label: 'Draft', icon: FileEdit, colorClasses: 'bg-warning/15 text-warning border-warning/50' };
   }
   if ('active' in state) {
-    return { label: 'Active', icon: CheckCircle2, colorClasses: 'bg-green-900/50 text-green-300 border-green-600' };
+    return { label: 'Active', icon: CheckCircle2, colorClasses: 'bg-success/15 text-success border-success/50' };
   }
   // closed
-  return { label: 'Closed', icon: Lock, colorClasses: 'bg-gray-700/50 text-gray-300 border-gray-500' };
+  return { label: 'Closed', icon: Lock, colorClasses: 'bg-surface-2 text-muted border-border' };
 }
 
 export function StateBadge({ state }: StateBadgeProps) {

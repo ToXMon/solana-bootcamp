@@ -73,25 +73,25 @@ export function ProposalList() {
     return (
       <div className="space-y-3" role="status" aria-label="Loading proposals">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-gray-900 border border-gray-800 rounded-lg p-4 animate-pulse">
+          <div key={i} className="terminal-panel rounded-lg p-4 animate-pulse" aria-hidden="true">
             <div className="flex justify-between mb-3">
-              <div className="h-4 bg-gray-700 rounded w-3/5" />
-              <div className="h-5 bg-gray-700 rounded-full w-16" />
+              <div className="h-4 bg-surface-2 rounded w-3/5" />
+              <div className="h-5 bg-surface-2 rounded-full w-16" />
             </div>
             <div className="space-y-2 mb-4">
               <div className="flex justify-between">
-                <div className="h-3 bg-gray-700 rounded w-12" />
-                <div className="h-3 bg-gray-700 rounded w-8" />
+                <div className="h-3 bg-surface-2 rounded w-12" />
+                <div className="h-3 bg-surface-2 rounded w-8" />
               </div>
-              <div className="h-2 bg-gray-700 rounded-full w-full" />
+              <div className="h-2 bg-surface-2 rounded-full w-full" />
               <div className="flex justify-between">
-                <div className="h-3 bg-gray-700 rounded w-10" />
-                <div className="h-3 bg-gray-700 rounded w-8" />
+                <div className="h-3 bg-surface-2 rounded w-10" />
+                <div className="h-3 bg-surface-2 rounded w-8" />
               </div>
             </div>
             <div className="flex gap-2">
-              <div className="h-7 bg-gray-700 rounded-md w-20" />
-              <div className="h-7 bg-gray-700 rounded-md w-16" />
+              <div className="h-7 bg-surface-2 rounded-md w-20" />
+              <div className="h-7 bg-surface-2 rounded-md w-16" />
             </div>
           </div>
         ))}
@@ -107,14 +107,14 @@ export function ProposalList() {
         role="alert"
         className="flex flex-col items-center gap-3 py-8 text-center"
       >
-        <AlertCircle className="h-10 w-10 text-red-400" aria-hidden="true" />
+        <AlertCircle className="h-10 w-10 text-destructive" aria-hidden="true" />
         <div>
-          <h3 className="text-sm font-medium text-red-300">Failed to load proposals</h3>
-          <p className="text-xs text-gray-500 mt-1 max-w-xs">{error}</p>
+          <h3 className="text-sm font-medium text-destructive">Failed to load proposals</h3>
+          <p className="text-xs text-muted mt-1 max-w-xs">{error}</p>
         </div>
         <button
           onClick={loadProposals}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-surface-2 text-foreground hover:bg-surface transition-colors ease-expo"
           aria-label="Retry loading proposals"
         >
           <RefreshCw className="h-3 w-3" aria-hidden="true" />
@@ -128,10 +128,10 @@ export function ProposalList() {
   if (viewState === 'empty') {
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <ClipboardList className="h-14 w-14 text-gray-600" aria-hidden="true" />
+        <ClipboardList className="h-14 w-14 text-muted" aria-hidden="true" />
         <div>
-          <h3 className="text-base font-semibold text-gray-300">No proposals yet</h3>
-          <p className="text-sm text-gray-500 mt-1">Create one to get started!</p>
+          <h3 className="text-base font-semibold text-foreground">No proposals yet</h3>
+          <p className="text-sm text-muted mt-1">Create one from the sidebar to get started.</p>
         </div>
         {connected ? (
           <div className="flex flex-col items-center gap-2">
@@ -143,7 +143,7 @@ export function ProposalList() {
                   onChange={(e) => setCreateTitle(e.target.value)}
                   placeholder="Proposal title..."
                   maxLength={64}
-                  className="px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64"
+                  className="px-3 py-1.5 text-sm bg-surface border border-border rounded-md text-foreground placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-primary/30 w-64"
                   aria-label="Proposal title"
                   onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
                   disabled={creating}
@@ -152,7 +152,7 @@ export function ProposalList() {
                 <button
                   onClick={handleCreate}
                   disabled={creating || !createTitle.trim()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition ease-expo"
                   aria-label="Confirm create proposal"
                 >
                   {creating ? (
@@ -164,7 +164,7 @@ export function ProposalList() {
                 </button>
                 <button
                   onClick={() => { setShowCreate(false); setCreateTitle(''); }}
-                  className="px-3 py-1.5 text-xs font-medium rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium rounded-md bg-surface-2 text-muted hover:text-foreground transition-colors ease-expo"
                   aria-label="Cancel"
                 >
                   Cancel
@@ -173,7 +173,7 @@ export function ProposalList() {
             ) : (
               <button
                 onClick={() => setShowCreate(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:brightness-110 transition ease-expo"
                 aria-label="Create new proposal"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
@@ -182,7 +182,7 @@ export function ProposalList() {
             )}
           </div>
         ) : (
-          <p className="text-xs text-gray-500 italic">Connect your wallet to create proposals</p>
+          <p className="text-xs text-muted italic">Connect your wallet to create proposals</p>
         )}
       </div>
     );
@@ -202,7 +202,7 @@ export function ProposalList() {
                 onChange={(e) => setCreateTitle(e.target.value)}
                 placeholder="Proposal title..."
                 maxLength={64}
-                className="px-3 py-1.5 text-sm bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64"
+                className="px-3 py-1.5 text-sm bg-surface border border-border rounded-md text-foreground placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-primary/30 w-64"
                 aria-label="Proposal title"
                 onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
                 disabled={creating}
@@ -211,7 +211,7 @@ export function ProposalList() {
               <button
                 onClick={handleCreate}
                 disabled={creating || !createTitle.trim()}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed transition ease-expo"
                 aria-label="Confirm create proposal"
               >
                 {creating ? (
@@ -223,7 +223,7 @@ export function ProposalList() {
               </button>
               <button
                 onClick={() => { setShowCreate(false); setCreateTitle(''); }}
-                className="px-3 py-1.5 text-xs font-medium rounded-md bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium rounded-md bg-surface-2 text-muted hover:text-foreground transition-colors ease-expo"
                 aria-label="Cancel"
               >
                 Cancel
@@ -232,7 +232,7 @@ export function ProposalList() {
           ) : (
             <button
               onClick={() => setShowCreate(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-500 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:brightness-110 transition ease-expo"
               aria-label="Create new proposal"
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
@@ -246,13 +246,13 @@ export function ProposalList() {
       {error && (
         <div
           role="alert"
-          className="flex items-center gap-2 px-3 py-2 bg-red-900/30 border border-red-800 rounded-md text-xs text-red-300"
+          className="flex items-center gap-2 px-3 py-2 bg-destructive/10 border border-destructive/40 rounded-md text-xs text-destructive"
         >
           <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           <span className="flex-1">{error}</span>
           <button
             onClick={() => setError('')}
-            className="text-red-400 hover:text-red-300"
+            className="text-destructive hover:brightness-125"
             aria-label="Dismiss error"
           >
             ×
@@ -271,22 +271,22 @@ export function ProposalList() {
         return (
           <div
             key={proposal.publicKey.toBase58()}
-            className={`bg-gray-900 border border-gray-800 rounded-lg p-4 transition-opacity ${isPending ? 'opacity-60' : ''}`}
+            className={`terminal-panel rounded-lg p-4 transition-opacity ease-expo ${isPending ? 'opacity-60' : ''}`}
             role="article"
             aria-label={`Proposal: ${proposal.account.title}`}
             aria-busy={isPending}
           >
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-100 pr-2">{proposal.account.title}</h3>
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-yellow-500/20 text-yellow-400 border-yellow-500/50">
+              <h3 className="text-sm font-semibold text-foreground pr-2">{proposal.account.title}</h3>
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full border bg-warning/15 text-warning border-warning/50">
                 {stateLabel}
               </span>
             </div>
-            <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
-              <span className="text-green-400">Yes: {yesCount}</span>
-              <span className="text-red-400">No: {noCount}</span>
+            <div className="flex items-center gap-4 text-xs text-muted mb-3">
+              <span className="text-success">Yes: {yesCount}</span>
+              <span className="text-destructive">No: {noCount}</span>
             </div>
-            <p className="text-xs text-gray-500 italic">Use ProposalCard component for full functionality</p>
+            <p className="text-xs text-muted italic">Use ProposalCard component for full functionality</p>
           </div>
         );
       })}

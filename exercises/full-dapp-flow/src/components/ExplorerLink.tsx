@@ -15,7 +15,7 @@ export function ExplorerLink({ type, value, cluster = 'devnet' }: ExplorerLinkPr
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="text-blue-400 hover:text-blue-300 underline"
+      className="text-primary underline underline-offset-4 hover:brightness-125"
     >
       {truncated}
     </a>
