@@ -1,0 +1,28 @@
+{
+  "name": "Bootcamp Member #2 Explorer",
+  "symbol": "BCM",
+  "description": "Exercise 10 member NFT #2",
+  "image": "https://placehold.co/400x400/00B4D8/fff?text=Member+2",
+  "attributes": [
+    {
+      "trait_type": "Course",
+      "value": "Solana Bootcamp"
+    },
+    {
+      "trait_type": "Exercise",
+      "value": "10"
+    },
+    {
+      "trait_type": "Type",
+      "value": "Member"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Member ID",
+      "value": "2"
+    }
+  ]
+}

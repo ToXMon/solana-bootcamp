@@ -1,0 +1,20 @@
+{
+  "name": "defi-cli",
+  "version": "1.0.0",
+  "description": "Exercise 9 — DeFi Basics: Pyth + Jupiter spread CLI (quote only, no swaps)",
+  "main": "src/index.ts",
+  "type": "commonjs",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "check": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.95.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.0",
+    "tsx": "4.22.4",
+    "typescript": "5.7.2"
+  }
+}

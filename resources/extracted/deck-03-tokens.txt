@@ -1,0 +1,293 @@
+ ENCODE · SOLANA DEVELOPER COURSE                           DECK 03   WEEK 3 · TOKENS
+
+
+
+
+Tokens &
+DECK 03 · WEEK 3
+
+
+
+
+Token-2022
+This week you build tokens in practice: standard
+SPL first, then Token-2022 with extensions.
+
+
+                                                   MINT · TRANSFER · DECODE · COMPARE
+ WEEK 3 ROADMAP                                                                                                                            02 / 14
+
+
+
+
+DeFi, NFTs, governance and
+TOKENS ARE THE CORE BUILDING BLOCK
+
+
+
+
+payments all depend on token
+accounts and token programs.
+ Exercise 3 · Your First Token                                              Exercise 4 · Token-2022 Extensions
+ Create an SPL mint, create token accounts, mint supply, transfer           Create a Token-2022 mint with extensions, test extension behavior,
+ between wallets, then script balance reads in TypeScript.                  and decode extension data from the mint account.
+  OUTPUT: WORKING SPL TOKEN FLOW                                             OUTPUT: EXTENDED TOKEN MINT
+
+
+
+
+   i    AI SUPPORT STEPS DOWN
+        Guidance is lighter than Week 2. You get prompts and pitfalls, but you're expected to decide more of the implementation details.
+ EXERCISE 3 · QUICK RECAP                                                                                                                    03 / 14
+
+
+
+
+Your wallet does not "contain"
+THREE TOKEN ACCOUNT TYPES
+
+
+
+
+tokens. Token accounts do.
+ Mint account                                         Token account                                      Associated Token Account
+ Defines the token: total supply, decimals, and       Holds one wallet's balance of one mint. Three      Deterministic token account derived from
+ mint authority. One mint account per token.          different tokens means three token accounts.       wallet + mint. Standard way to locate
+                                                                                                         balances.
+
+
+
+
+   ↯     COMMON MIX-UP
+         Fetching a token balance from a wallet address fails. Always derive or look up the ATA first.
+ EXERCISE 3 · BUILD FLOW                                                                                      04 / 14
+
+
+
+
+Use the spl-token CLI to create,
+CLI-FIRST TOKEN CREATION
+
+
+
+
+mint, and inspect before writing code.
+01   Create a mint and save the mint address.      QUICK BALANCE CHECK
+
+02   Create your wallet ATA for that mint.         spl-token accounts
+
+03   Mint a round amount such as 1000 .          Then inspect the mint on Explorer (devnet): supply, decimals, and mint
+                                                 authority should match your intent.
+04   Verify holdings with spl-token accounts .
+ EXERCISE 3 · CONFIG HYGIENE                                                                    05 / 14
+
+
+
+
+Record public token metadata once so
+SAVE THE METADATA YOU WILL REUSE
+
+
+
+
+scripts and apps don't drift between runs.
+ CONFIG/TOKENS.DEVNET.JSON         Store these values
+ {                                 mint , ownerTokenAccount , decimals , cluster, and useful transaction
+                                   signatures for debugging.
+   "cluster": "devnet",
+   "tokens": {
+     "token1": {                     !    NEVER STORE SECRETS
+       "mint": "NEW_MINT_HERE",           Do not commit private keys, seed phrases, or keypair JSON
+       "ownerTokenAccount":               contents in project files.
+ "NEW_TOKEN_ACCOUNT_HERE",
+       "decimals": 9
+     }
+   }
+ }
+ EXERCISE 3 · TRANSFER TOKENS                                                                    06 / 14
+
+
+
+
+Create a second wallet, transfer 100
+TWO WALLETS, ONE MINT
+
+
+
+
+tokens, and verify both balances.
+  1   SECOND WALLET                                 2   CREATE/USE ATA
+      Generate a keypair with solana-keygen new         Create or target recipient ATA for your mint,
+      --outfile ~/second-wallet.json and                then run a transfer of 100 tokens.
+      airdrop SOL for rent fees.
+
+
+  3   VERIFY END STATE                              ↯   UNDER THE HOOD
+      Main wallet should drop by 100, recipient         If recipient ATA doesn't exist, CLI may
+      should receive 100. Confirm through CLI and       perform ATA creation + transfer as separate
+      Explorer.                                         operations.
+ ● EXERCISE 3 · SCRIPTING                    07 / 14
+
+
+
+
+Read token
+TYPESCRIPT CHECKPOINT
+
+
+
+
+balances.
+DERIVE ATA · FETCH ACCOUNT · FORMAT UNITS   PART 03 →
+ EXERCISE 3 · TYPESCRIPT SCRIPT                                                                                       08 / 14
+
+
+
+
+Connect to devnet, derive ATAs,
+SCRIPT REQUIREMENTS
+
+
+
+
+fetch balances, print readable values.
+MUST INCLUDE                                             DECIMALS CHECK
+
+
+01   Mint address + two wallet addresses (hardcoded is   Raw token amounts are base units. Divide by 10^decimals to
+     fine).                                              display user-facing token values.
+02    getAssociatedTokenAddress for each wallet.            ↯    AI PITFALL
+                                                                 Generated scripts often hardcode 9 decimals or print raw
+03    getAccount to fetch token account data.                    integers. Read decimals from the mint.
+04   Readable output for both balances.
+ AI GUIDANCE · EXERCISE 3                                                                                                               09 / 14
+
+
+
+
+AI is strong on CLI syntax and boilerplate,
+WHERE AI HELPS VS WHERE TO VERIFY
+
+
+
+
+weaker on your local token/account state.
+ Good AI use                                                              Verify manually
+ Generate command syntax, TypeScript scaffolding, and diagnostics for     Program IDs, package versions, decimals logic, and whether addresses
+ missing ATA or wrong address inputs.                                     are wallet keys or token accounts.
+
+
+
+
+ Frequent failure                                                         Done when
+ account not found    because ATA was never created, or script tries to   CLI and script both report consistent balances and Explorer confirms
+ read wallet address as token account.                                    supply + ownership fields.
+ ● EXERCISE 4                               10 / 14
+
+
+
+
+Programmable
+TOKEN-2022 EXTENSIONS
+
+
+
+
+token behavior.
+CREATE WITH EXTENSIONS · TEST ENFORCEMENT   EX 04 →
+ EXERCISE 4 · TOKEN-2022 BASICS                                                                                                                11 / 14
+
+
+
+
+Token-2022 is a different program
+EXTENSIONS ARE BAKED IN AT CREATION
+
+
+
+
+from classic SPL Token, with additional
+mint/account data and behaviors.
+ Metadata                                                                      Transfer fee
+ Name, symbol, and URI can live directly on the mint, without a separate       Each transfer withholds a configured fee, collected later by the fee
+ metadata account.                                                             authority.
+
+
+ Non-transferable                                                              Default frozen state
+ Tokens can be minted and burned but cannot be transferred between             New accounts start frozen and require authority action before
+ wallets.                                                                      transfers are allowed.
+
+
+   !     PERMANENT CHOICE
+         You cannot add extensions to an existing mint. If config changes, create a new mint.
+ EXERCISE 4 · BUILD + COMPARE                                                                                        12 / 14
+
+
+
+
+The goal is understanding account-
+BUILD IT, THEN CONTRAST WITH EXERCISE 3
+
+
+
+
+level differences between standard
+SPL and Token-2022 mints.
+01   Create a Token-2022 mint with at least two extensions.   COMPARE         SPL TOKEN               TOKEN-2022
+
+02   Mint supply and test behavior (fee withheld, transfer    Program owner   Tokenkeg...             TokenzQd...
+     blocked, freeze/thaw, etc.).
+     Inspect with spl-token display <MINT_ADDRESS> .          Mint data       Standard fields only    Standard + extension
+03                                                                                                    fields
+04   Write a TS script to decode extension settings from                      Fixed primitive token   Programmable extension
+     mint account data.                                       Behavior
+                                                                              logic                   logic
+ AI GUIDANCE · EXERCISE 4                                                                                    13 / 14
+
+
+
+
+Use AI for parameter-heavy setup, but cross-
+TOKEN-2022 IS WHERE STALE OUTPUT SHOWS UP
+
+
+
+
+check current docs for compatibility and flags.
+AI HELPS WITH                                            YOU MUST VERIFY
+
+
+01   Generating CLI commands or scripts with extension   01   Program ID targets Token-2022, not classic SPL.
+     parameters.
+                                                         02   Extensions are configured at mint creation time.
+02   Decoding extension bytes in TypeScript.
+                                                         03   Chosen extension set is compatible.
+03   Explaining extension use cases before you pick
+     combinations.                                       04   CLI flags match current documentation.
+ WEEK 3 RECAP                                                                                                                     14 / 14
+
+
+
+
+You can create and reason about both standard
+WHAT YOU LEAVE WITH
+
+
+
+
+and extended token systems on Solana.
+ SPL token workflow                                                 Balance script
+ Created, minted, transferred, and inspected with CLI + Explorer.   TypeScript script derives ATAs, reads accounts, and formats balances
+                                                                    using decimals.
+
+
+
+
+ Token-2022 practice                                                Account-level comparison
+ Mint with extensions configured and behavior validated.            You can explain mint structure, program ownership, and capability
+                                                                    differences.
+
+
+
+                                                                             NEXT WEEK → PROGRAMS & FRONTEND (CPI + REACT)
+

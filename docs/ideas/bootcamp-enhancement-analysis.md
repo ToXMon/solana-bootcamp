@@ -139,6 +139,140 @@ The repo contains 11 modules, of which 9 include code and 2 are video-only:
 
 ---
 
+## Focused Toolchain Conflict Evaluation
+
+### Current Project Evidence
+
+The user's active projects already show why the SF repo should not be dropped into the existing bootcamp environment:
+
+| Local file | Observed stack / issue | Why it matters |
+|------------|------------------------|----------------|
+| `exercises/proposal-state-machine/package.json` | `@coral-xyz/anchor` is `^0.31.0` | This matches the Encode Club Anchor line and should stay stable through Weeks 5-6. |
+| `exercises/proposal-state-machine/Anchor.toml` | Devnet program id `8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG`; provider cluster `Devnet`; package manager `yarn` | The deployed program and tests depend on the current Anchor CLI/client assumptions. |
+| `exercises/full-dapp-flow/package.json` | Frontend uses `@coral-xyz/anchor` `^0.30.1`, `@solana/web3.js` `^1.91.8`, wallet-adapter packages, Vite/React 18 | The deployed frontend is already on a slightly different Anchor JS version than the program workspace. More drift would increase data-layer risk. |
+| `exercises/full-dapp-flow/src/lib/accounts.ts` | Manual account decoding exists because the IDL has spec `0.1.0` while the Anchor JS coder expects spec `1.0.0`; `program.coder.accounts.decode('Proposal', ...)` failed with `Account not found: Proposal` | This is direct evidence that IDL/client format drift already broke account reads once. |
+| `exercises/full-dapp-flow/src/lib/program.ts` | `new Program(idl as any, provider)` with wallet-adapter + AnchorProvider | The frontend data layer relies on Anchor's JS client interpretation of the IDL and provider wallet/RPC behavior. |
+
+### Anchor v0.31.x vs v1.0.0-rc.2
+
+The SF repo's Anchor v1.0.0-rc.2 should be treated as a separate toolchain, not an upgrade target during the Encode Club bootcamp.
+
+Key conflict areas:
+
+- CLI/runtime coupling: the `anchor` binary on `PATH` controls build, IDL generation, tests, and deploy behavior. Installing the RC globally could make existing v0.31.x projects fail in non-obvious ways.
+- Rust crate/API drift: account constraints, token interface patterns, generated IDLs, and helper crates may expect the v1.0 RC line. Even if code compiles after edits, generated artifacts may not match the JS client the frontend uses.
+- IDL compatibility: the user's proposal dApp already hit an IDL spec mismatch. Moving to a repo built around newer IDL/client assumptions increases the risk of account coder failures, missing account namespaces, generated type mismatches, and method/account naming mismatches.
+- Client generation model: current projects use manual Anchor JS calls plus hand-written PDA helpers. The SF repo uses Codama-generated clients in at least the full-stack modules. That changes where PDA derivation, instruction builders, account fetchers, and TypeScript types come from.
+- Frontend state model: the current Vite dApp manually fetches program accounts, decodes bytes, and refreshes state. A Codama/framework-kit app will likely hide more of this behind generated helpers and hooks. That is useful later, but dangerous mid-bootcamp because debugging moves from known code into generated abstractions.
+- Version pinning: local packages currently use caret ranges (`^0.31.0`, `^0.30.1`, `^1.91.8`). For a learning project this is workable, but any serious port should pin exact versions or use a lockfile/container to avoid silent minor-version drift.
+
+### Why the December Proposal dApp Data-Layer Pain Matters
+
+The proposal dApp's workaround in `src/lib/accounts.ts` is the strongest signal in this analysis. The frontend could not rely on Anchor's account coder because the IDL format and JS client expectations did not line up, so it bypassed the coder and decoded account bytes directly.
+
+That class of failure tends to affect exactly the areas the user will need for DeFi, NFTs, and hackathon apps:
+
+- Reading accounts: `program.account.someAccount.fetch()` can fail if the IDL account name, discriminator mapping, or IDL spec version does not match what the client expects.
+- Generated types: TypeScript types can compile while runtime account decoding still fails, especially when the IDL shape changes but the deployed program/account layout does not.
+- PDA derivation: generated clients may derive seeds differently from hand-written helpers if seed order, endian encoding, account names, or IDL seed metadata differ.
+- Wallet/RPC flows: AnchorProvider, wallet-adapter, framework-kit hooks, and raw `Connection` calls each handle commitment, signer availability, and transaction confirmation slightly differently.
+- Frontend state: when account fetches fail or return stale data, the UI can show empty proposals, wrong vote state, duplicate loading, or successful transactions that do not appear until manual refresh.
+
+For the lotto/Powerball idea, this matters even more than in a proposal app. A micro-payment lottery app needs reliable reads for ticket ownership, draw state, prize pools, randomness/settlement status, and payout eligibility. A silent data-layer mismatch is not just annoying; it can make the UI misrepresent money state.
+
+### Codama and Framework-Kit Risk/Reward
+
+Codama and framework-kit are worth studying, but not adopting inside existing exercises yet.
+
+| Tool | Reward | Risk during active bootcamp | Suggested use |
+|------|--------|-----------------------------|---------------|
+| Codama | Generates TypeScript clients from IDL; reduces manual serializers, PDA helpers, and account fetch boilerplate | Adds a codegen step; generated clients can hide IDL drift; harder to debug before the user fully understands the raw flow | Study module 11 now. Use Codama only for a fresh sandbox or post-bootcamp project. |
+| framework-kit / `@solana/react-hooks` | Cleaner wallet/RPC hooks and production frontend patterns | Another abstraction over wallet-adapter/web3.js flow; may mask provider/commitment/transaction confirmation details | Read patterns now. Keep the current Vite frontend on explicit wallet-adapter + Anchor/web3 calls. |
+| LiteSVM | Fast deterministic tests without a full local validator | Different mental model from `anchor test`; may depend on Anchor v1 RC examples; less practice with validator/devnet realism | Study test structure now. Consider adopting after bootcamp for unit-style program tests. |
+
+### Docker vs GHCR, Plainly
+
+Docker is the tool that runs containers. Podman can also run many Docker-compatible containers. GHCR, the GitHub Container Registry, is only a place to store container images.
+
+Plain model:
+
+```text
+Dockerfile -> image -> GHCR stores image -> Docker/Podman runs image -> isolated shell/toolchain
+```
+
+So GHCR does not replace Docker. A pinned GHCR image helps if someone publishes an image like:
+
+```text
+ghcr.io/solana-foundation/solana-bootcamp-2026:anchor-1.0.0-rc.2
+```
+
+That would let the user run the SF repo in an isolated environment without changing the local `anchor` binary. The image should pin Anchor, Solana CLI, Rust, Node/Bun/Yarn, Noir/Nargo, and any module-specific tooling.
+
+Local installs are acceptable when:
+
+- the module uses the same Anchor/Solana/Node major versions as the user's current projects;
+- the tool is easy to remove or version-manage;
+- the user is not in the middle of deadline-sensitive bootcamp work;
+- the module is read-only or conceptual, not being deployed.
+
+A container is better when:
+
+- testing Anchor v1.0.0-rc.2;
+- running SF modules with LiteSVM/Codama/framework-kit;
+- installing ZK tooling such as Noir/Nargo or Sunspot;
+- preserving the user's current v0.31.x bootcamp setup;
+- sharing a reproducible hackathon environment later.
+
+### Week 5-6 Strategy: DeFi, Escrow, NFTs, ZK
+
+Given the incoming Week 5-6 focus on DeFi, escrow, DeFi, and NFTs, the best short-term path is concept-first study of SF modules that map to those topics, while keeping the current toolchain unchanged.
+
+| Priority | SF module | Study now or defer | Reason |
+|----------|-----------|--------------------|--------|
+| 1 | `04-escrow` | Study now | Directly matches escrow week. Focus on PDA vaults, `transfer_checked`, account closure, and `TokenInterface` patterns. Port concepts only. |
+| 2 | `07-stableswap` | Study now | Best DeFi match. Focus on AMM invariant, slippage, amplification, checked math, and oracle/depeg guardrails. Defer full implementation unless Week 5-6 requires an AMM. |
+| 3 | `09-solana-rwa-labubu` | Study now if NFTs appear | Useful for Token-2022 NFT/collection patterns and weighted minting. Skip the branding/theme; extract mint/collection/account structure. |
+| 4 | `06-stablecoin` | Study if DeFi time remains | Strong production patterns: mint roles, allowances, pause/burn. Useful bridge from Token-2022 to DeFi. |
+| 5 | `11-prediction-market` | Read selectively | Highest frontend architecture value, but Codama/framework-kit should remain conceptual until after the current dApp stack is stable. |
+| 6 | `05-private-transfers` | Defer implementation; read concepts | ZK is high-value for lotto privacy/fairness, but the tooling stack is too heavy for the next few days. |
+| Skip | `08-solana-x402-demo` | Defer/skip | Less aligned with DeFi, escrow, NFTs, hackathons, and the lotto app. |
+
+### ZK Depth Recommendation
+
+Go deep on ZK, but in the right order.
+
+For the Latin America lotto/Powerball idea, ZK could add value in three possible ways:
+
+1. private participation: prove a user bought an eligible ticket without revealing all ticket metadata;
+2. fair draw mechanics: combine commitments, nullifiers, randomness, and public verification so users can audit that the draw was not manipulated;
+3. payout/privacy UX: prove eligibility or prevent double-claiming without exposing unnecessary user data.
+
+However, ZK should not be the first implementation layer. The first lotto prototype should prove the ordinary Solana mechanics: micro-payments, ticket account model, draw lifecycle, randomness source assumptions, prize pool accounting, admin controls, and payout rules. Then add ZK where it solves a real trust/privacy problem.
+
+Recommended path:
+
+- Now: read SF module 05 instructions and diagrams for vocabulary: commitments, Merkle roots, membership proofs, nullifiers, Groth16 verifier, off-chain proof generation.
+- Weeks 5-6: prioritize escrow/DeFi/NFT modules that match the curriculum.
+- Post-bootcamp: build a small ZK proof-of-concept in a container before mixing it into the lotto app.
+- Hackathon/open-source angle: ZK becomes a differentiator if the core app already works. A broken lottery with ZK is weaker than a working lottery with clear upgrade path to ZK privacy/fairness.
+
+### Concrete Decision
+
+Do not install Anchor v1.0.0-rc.2 globally. Do not migrate active v0.31.x projects. Do not retrofit Codama/framework-kit into the proposal dApp.
+
+Recommended decision for the IDEA stage:
+
+1. Keep the current Anchor v0.31.x toolchain for all Encode Club work and Week 5-6 assignments.
+2. Use the SF repo as a reading/porting reference for escrow, StableSwap, Token-2022 stablecoin/NFTs, and prediction-market architecture.
+3. If the user wants to run SF code, create a separate Docker/Podman sandbox. Prefer a pinned GHCR image if the SF repo publishes one; otherwise build a local image from a pinned Dockerfile.
+4. Pin exact versions in any sandbox. Record Anchor CLI version, Solana CLI version, Rust version, Node/Bun/Yarn versions, and module commit hash.
+5. For the next spec decision, choose one capstone track:
+   - DeFi track: escrow + simplified StableSwap using current Anchor v0.31.x.
+   - NFT track: Token-2022 collection/mystery-box pattern using current tooling.
+   - Lotto track: micro-payment ticketing + prize pool first, with ZK as post-MVP privacy/fairness layer.
+
+---
+
 ## Feasibility Assessment
 
 ### Can Run As-Is: No
@@ -202,14 +336,19 @@ After completing the Encode Club bootcamp, the user could:
 
 ---
 
-## Clarifying Questions for User
+## Resolved User Context and Remaining Questions
 
-1. **Week 5-6 curriculum**: Do you know what topics the Encode Club bootcamp covers in Weeks 5-6? If ZK, AMMs, or full-stack dApps are already planned, the supplementation value changes significantly.
+### Resolved Context
 
-2. **Post-bootcamp goals**: Are you planning to build a portfolio project or contribute to a Solana dApp after the bootcamp? This affects which SF modules are worth deep-diving into.
+- The user has already built and deployed a December proposal dApp and experienced real data-layer breakage from Anchor/IDL/client mismatch.
+- Weeks 5-6 arrive soon and are expected to cover DeFi, escrow, DeFi, and NFTs.
+- Post-bootcamp goals are practical: build DeFi apps, contribute to open-source Solana projects, compete in hackathons, and build a Latin America micro-payment lotto/Powerball-style Solana app.
+- The user is open to Docker but needs the purpose explained. Docker/Podman is for running isolated toolchains; GHCR is only a registry for storing images.
+- The user wants to go deep on ZK if it helps them build. Recommendation: learn ZK concepts now, prototype ZK after the ordinary lotto/payment mechanics work.
 
-3. **Docker availability**: Would you be open to running a Docker container with Anchor v1.0.0-rc.2 for isolated experimentation, or do you prefer to stay on v0.31.0 until the bootcamp ends?
+### Remaining Questions
 
-4. **ZK interest level**: Zero-knowledge proofs are a significant domain. Is this an area you want to explore, or is it outside your current learning goals?
-
-5. **Frontend stack preference**: Your Week 4 work uses web3.js v2. Are you interested in evaluating framework-kit + Codama as an alternative, or do you want to master web3.js v2 first? 
+1. Does the SF bootcamp repo publish an official pinned GHCR image for Anchor v1.0.0-rc.2, LiteSVM, Codama, framework-kit, and ZK tooling? If yes, use that for sandbox runs.
+2. Which Week 5-6 assignment becomes the user's main capstone: escrow, AMM/DeFi, NFT, or lotto-style payments?
+3. Does the user want a Dockerfile/compose sandbox after IDEA, or only a written migration/spec decision first?
+4. For the lotto app, what is the first jurisdiction/product constraint to model: micro-payment UX, prize custody, randomness, compliance, or privacy?

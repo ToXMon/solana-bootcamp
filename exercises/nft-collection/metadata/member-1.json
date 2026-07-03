@@ -1,0 +1,28 @@
+{
+  "name": "Bootcamp Member #1 Genesis",
+  "symbol": "BCM",
+  "description": "Exercise 10 member NFT #1",
+  "image": "https://placehold.co/400x400/FF6B35/fff?text=Member+1",
+  "attributes": [
+    {
+      "trait_type": "Course",
+      "value": "Solana Bootcamp"
+    },
+    {
+      "trait_type": "Exercise",
+      "value": "10"
+    },
+    {
+      "trait_type": "Type",
+      "value": "Member"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Member ID",
+      "value": "1"
+    }
+  ]
+}

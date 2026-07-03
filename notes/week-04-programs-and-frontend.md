@@ -79,3 +79,10 @@ anchor test --provider.cluster devnet
 2. Build and test locally before devnet deployment.
 3. Verify program ID and transactions on Solana Explorer.
 4. Move to Exercise 6 (CPI tip jar) once tests pass.
+
+## Source Capture
+
+| Source | Path |
+|---|---|
+| Original PDF | `/a0/usr/projects/solana_bootcamp/resources/uploads/Solana_Developer_Course___Deck_04___Programs___Frontend.pdf` |
+| Extracted text | `/a0/usr/projects/solana_bootcamp/resources/extracted/deck-04-programs-frontend.txt` |

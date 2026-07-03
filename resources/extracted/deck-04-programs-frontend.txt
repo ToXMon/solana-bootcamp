@@ -1,0 +1,304 @@
+ ENCODE · SOLANA DEVELOPER COURSE             DECK 04   WEEK 4 · PROGRAMS & FRONTEND
+
+
+
+
+Programs &
+DECK 04 · WEEK 4
+
+
+
+
+Frontend
+This is the heaviest week: state machines,
+cross-program invocations, and a React
+app that signs real transactions on devnet.
+
+encode C L U B                                                      STATE · CPI · UI
+ WEEK 4 ROADMAP                                                                                                                           02 / 15
+
+
+
+
+Build logic, compose programs,
+THREE EXERCISES, ONE DAPP ARC
+
+
+
+
+then put a browser interface on top.
+ Exercise 5                                         Exercise 6                                      Exercise 7
+ Proposal state machine with guarded                Tip jar using CPI to System Program with both   React frontend with wallet adapter, on-chain
+ transitions: Draft → Active → Closed.               invoke and invoke_signed .                     reads, transaction submission, and UI updates.
+  STATE MACHINE                                      CPI + PDA AUTH                                  FULL DAPP FLOW
+
+
+
+
+   ↯     GUIDANCE LEVEL
+         AI support is minimal this week. You own the prompting, checking, and debugging loop.
+ ● EXERCISE 5             03 / 15
+
+
+
+
+Guard
+STATE MACHINES
+
+
+
+
+transitions.
+DRAFT · ACTIVE · CLOSED   EX 05 →
+ EXERCISE 5 · DESIGN                                                                                               04 / 15
+
+
+
+
+State is simple. Permission checks and
+PROPOSAL/VOTING PROGRAM
+
+
+
+
+transition guards are the real challenge.
+REQUIRED MODEL                                                 FAILURE TESTS
+
+
+01   ProposalState   enum: Draft, Active, Closed.              01   Vote in Draft should fail.
+02   Proposal PDA stores title, state, vote counts, creator    02   Vote in Closed should fail.
+     pubkey.
+                                                               03   Non-creator activate/close should fail.
+03   create_proposal , activate , vote , close instructions.
+                                                               04   Duplicate vote should fail (if implemented).
+04   Creator-only authority for activate/close.
+ EXERCISE 5 · PITFALLS                                                                                                                       05 / 15
+
+
+
+
+AI usually writes the happy path. You need
+WHAT TO WATCH FOR
+
+
+
+
+to enforce invalid transition rejection.
+ Guard logic gaps                                                           Voter PDA collisions
+ Generated code often skips checks for Draft voting or closing closed       Include both proposal id and voter pubkey in vote PDA seeds to avoid
+ proposals.                                                                 collisions.
+
+
+
+ Opaque errors                                                              String space math
+ Use custom #[error_code] variants so failed transitions are explainable.   Remember string allocation includes 4-byte length prefix plus max bytes.
+
+
+
+  DEPLOY + RUN AGAINST DEVNET
+
+  anchor test --provider.cluster devnet
+ ● EXERCISE 6            06 / 15
+
+
+
+
+Call other
+CPI & COMPOSABILITY
+
+
+
+
+programs.
+INVOKE · INVOKE_SIGNED   EX 06 →
+ EXERCISE 6 · TIP JAR CPI                                                                                                                  07 / 15
+
+
+
+
+Same transfer instruction,
+TWO SIGNER PATTERNS
+
+
+
+
+different authority source.
+ invoke     for deposit                                                       invoke_signed      for withdraw
+ User transfers their own SOL into vault PDA. User signs transaction.        Vault PDA sends SOL out. Program provides seeds + bump so PDA acts as
+  USER SIGNER
+                                                                             signer.
+                                                                              PDA SIGNER
+
+
+
+
+    i    PDA DESIGN
+         Use vault seeds like ["vault", owner_wallet] so each owner has deterministic storage and withdraw authority.
+ EXERCISE 6 · CPI ACCOUNT LISTS                                                                                             08 / 15
+
+
+
+
+When transfers fail, inspect account
+MOST CPI FAILURES ARE METADATA FAILURES
+
+
+
+
+metas and signer assumptions first.
+ SYMPTOM                      LIKELY CAUSE                                   FIX
+
+ Missing required signature   Using invoke where PDA signer is needed.       Switch to new_with_signer + correct seeds.
+ Insufficient account keys    System Program or transfer accounts omitted.   Pass sender, recipient, and system program.
+ Invalid seeds                Derivation and signer seed bytes differ.       Unify seed order/encoding across init and withdraw.
+ Vault disappears             Balance dropped below rent-exempt threshold.   Check min balance or close account intentionally.
+ ● EXERCISE 7                   09 / 15
+
+
+
+
+Connect
+FRONTEND INTEGRATION
+
+
+
+
+the UI.
+WALLET · STATE · TRANSACTIONS   EX 07 →
+ EXERCISE 7 · FRONTEND STACK                                                                   10 / 15
+
+
+
+
+Your browser app needs providers for both
+REACT + WALLET ADAPTER + DEVNET
+
+
+
+
+RPC connection and wallet signing context.
+  ⚙   REQUIRED PACKAGES                              i   PROVIDERS
+      @solana/wallet-adapter-base    ,                   Wrap app with ConnectionProvider and
+      @solana/wallet-adapter-react       ,               WalletProvider so hooks and connect UI
+      @solana/wallet-adapter-react-ui            ,       work in all child components.
+      @solana/wallet-adapter-wallets         .
+
+  i   CODE DESIGN RULE                               ↯   LOGO DESIGN RULE
+      Use inline chips like anchor build for short       Use the text lockup encode + CLUB with the
+      fragments in prose. Use full .code-block           existing .wordmark / .club styles. Do not
+      only for multi-line commands/snippets.             introduce alternate logo treatments in this
+                                                         deck.
+ EXERCISE 7 · READ PATH                                                                           11 / 15
+
+
+
+
+The UI loop: derive PDA, fetch
+SHOW REAL ON-CHAIN DATA
+
+
+
+
+account, decode, render.
+01   Derive PDA with same seeds used by your program.     ANCHOR READ PATTERN
+
+02   Fetch account data from connection.                  const proposal = await
+
+03   Decode into program types (Anchor client or manual   program.account.proposal.fetch(proposalPda);
+     layout parsing).                                     setUiState({
+                                                            title: proposal.title,
+04   Render fields: state/votes or vault balance.           state: proposal.state,
+                                                            yesVotes: proposal.yesVotes,
+                                                            noVotes: proposal.noVotes
+                                                          });
+ EXERCISE 7 · WRITE PATH                                                                                                              12 / 15
+
+
+
+
+Build instruction, request signature,
+USER ACTION TO CONFIRMED TX
+
+
+
+
+send, confirm, then refresh state.
+ TRANSACTION FLOW
+
+ await program.methods
+   .vote({ yes: true })
+   .accounts({ proposal: proposalPda, voter: wallet.publicKey })
+   .rpc();
+
+ await refetchProposal();
+
+
+ UX requirement                                                        Error requirement
+ Show pending/confirmed status so users understand wallet popups and   Map program errors to readable UI messages instead of dumping raw
+ network delay.                                                        objects.
+ EXERCISE 7 · DEBUGGING                                                                                                 13 / 15
+
+
+
+
+Most issues are version mismatches and
+COMMON FRONTEND INTEGRATION FAILURES
+
+
+
+
+stale artifacts, not React complexity.
+ PROBLEM                       CAUSE                                 ACTION
+
+ Wallet adapter type errors    Package versions out of sync.         Pin all wallet-adapter packages to same version.
+ Instruction decode mismatch   Stale Anchor IDL in frontend.         Run anchor build and copy fresh IDL.
+ RPC 429 / flaky reads         Devnet public endpoint rate limits.   Throttle polling or use a provider endpoint.
+ Unexpected API syntax drift   Mixing web3.js v1 and v2 patterns.    Choose one API style and standardize codebase.
+ WEEK 4 · DONE WHEN                                                                                                   14 / 15
+
+
+
+
+Treat this checklist as your demo
+COMPLETION RUBRIC
+
+
+
+
+criteria for programs plus frontend.
+PROGRAMS                                                        FRONTEND
+
+
+01   Proposal transitions enforce rules with specific custom    01   Wallet connect button works on devnet.
+     errors.
+                                                                02   On-chain state displays correctly in UI.
+02   CPI tip jar accepts deposits and owner-only withdrawals.
+                                                                03   Submit action triggers wallet signature prompt.
+03   Tests cover success and failure cases on devnet.
+                                                                04   UI refreshes after confirmation and shows readable errors.
+ WEEK 4 RECAP                                                                                                                                       15 / 15
+
+
+
+
+On-chain logic + program composition
+YOU NOW HAVE A WORKING DAPP SHAPE
+
+
+
+
++ wallet-connected UI is the core
+stack you reuse everywhere.
+ State machine discipline                                                     CPI reasoning
+ You model allowed transitions and reject invalid state changes explicitly.   You can explain who signs and why for invoke vs invoke_signed .
+
+
+
+ Frontend transaction flow                                                    Debug maturity
+ You can connect wallet, send signed transactions, and refresh state from     You trace failures through seeds, accounts, IDLs, versions, and RPC
+ chain.                                                                       behavior.
+
+
+
+encode C L U B                                                                                                NEXT WEEK → ESCROW, DEFI, NFTS
+

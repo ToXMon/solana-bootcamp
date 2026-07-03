@@ -347,3 +347,42 @@ Do not move to implementation until:
 *Checklist created: 2026-06-23*
 *Replaces: previous counter-pda-based checklist*
 *Backend: Proposal state machine (Exercise 5), Program ID: 8o5EoWMSG3m4YjYMava2xzqmZtXxoHoLM8T8QttYtKFG*
+
+---
+
+# Week 5 — Escrow, DeFi & NFTs: Current Tasks
+
+## Exercise 8 — Trustless Escrow Program
+
+- [ ] Scaffold `exercises/escrow-program/` as an Anchor project.
+- [ ] Design escrow PDA seeds and state before coding.
+- [ ] Design PDA-controlled vault token account authority.
+- [ ] Implement `make` to lock maker Token A in the vault.
+- [ ] Implement `take` to transfer taker Token B to maker and release vault Token A to taker atomically.
+- [ ] Implement `cancel` to let maker reclaim Token A and close escrow/vault accounts.
+- [ ] Write tests for Make→Take, Make→Cancel, double-take, take-after-cancel, wrong mint, wrong authority, and balance reconciliation.
+- [ ] Deploy to devnet and verify on Solana Explorer.
+
+## Exercise 9 — DeFi Basics CLI
+
+- [ ] Create a TypeScript CLI for quote-only price comparison.
+- [ ] Fetch SOL/USD from Pyth on devnet.
+- [ ] Print confidence interval and staleness warning if price is older than 30 seconds.
+- [ ] Fetch SOL→USDC quote from Jupiter on mainnet.
+- [ ] Convert raw units correctly using SOL 9 decimals and USDC 6 decimals.
+- [ ] Compute implied Jupiter price and spread vs Pyth.
+
+## Exercise 10 — NFTs & Metadata
+
+- [ ] Create Umi devnet script setup.
+- [ ] Prepare valid public JSON metadata for collection and member NFTs.
+- [ ] Mint one collection NFT.
+- [ ] Mint three member NFTs with verified collection references.
+- [ ] Fetch/list collection NFTs and print name, image, and attributes.
+- [ ] Verify minted assets on Solana Explorer.
+
+## Week 5 Planning Artifact
+
+- [x] Create Week 5 implementation plan: `/a0/usr/projects/solana_bootcamp/tasks/week-05-implementation-plan.md`
+- [ ] Start Phase 0: record toolchain/version matrix for Week 5.
+- [ ] Start Exercise 8 design: escrow PDA seeds, state fields, vault authority, and failure-path test matrix.

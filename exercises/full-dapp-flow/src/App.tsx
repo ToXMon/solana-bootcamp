@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SolanaProvider } from './providers/SolanaProvider'
-import { CreateProposalForm, ProposalCard, WalletButton } from './components'
+import { CreateProposalForm, DeFiQuotePanel, ProposalCard, WalletButton } from './components'
 
 function App() {
   const [proposalListKey, setProposalListKey] = useState(0)
@@ -59,6 +59,13 @@ function App() {
               </section>
             </aside>
           </div>
+
+          <section className="mt-10" aria-labelledby="defi-panel-heading">
+            <h2 id="defi-panel-heading" className="font-mono text-xs uppercase tracking-[0.2em] text-muted mb-4">
+              DeFi Price Comparison
+            </h2>
+            <DeFiQuotePanel />
+          </section>
         </div>
       </div>
     </SolanaProvider>

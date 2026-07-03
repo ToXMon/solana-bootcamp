@@ -1,0 +1,313 @@
+ ENCODE · SOLANA DEVELOPER COURSE                    DECK 05   WEEK 5 · ESCROW, DEFI & NFTS
+
+
+
+
+Escrow,
+DECK 05 · WEEK 5
+
+
+
+
+DeFi & NFTs
+Exercise 8 is your hardest program. Exercises 9 and 10
+expand your integration skills for capstone-ready delivery.
+
+
+                                                                 ESCROW · PRICES · METADATA
+ WEEK 5 ROADMAP                                                                                                                                02 / 16
+
+
+
+
+This week rounds out your
+ONE HEAVY PROGRAM + TWO LIGHTER INTEGRATIONS
+
+
+
+
+toolkit before capstone.
+ Exercise 8 · Escrow                                Exercise 9 · DeFi                                     Exercise 10 · NFTs
+ Build trustless token exchange with make ,         CLI reads Pyth prices and Jupiter quote, then         Mint a collection and members with Umi +
+ take , and cancel .                                computes spread.                                      Metaplex Token Metadata.
+  HARDEST PROGRAM                                     QUOTE + ANALYSIS                                     COLLECTION TOOLING
+
+
+
+
+   ↯     SUPPORT SHIFT
+         No AI guidance boxes from here on. The prompting and verification workflow is now fully yours.
+ ● EXERCISE 8          03 / 16
+
+
+
+
+Trustless
+ESCROW PROGRAM
+
+
+
+
+swap.
+MAKE · TAKE · CANCEL   EX 08 →
+ EXERCISE 8 · WHAT YOU'RE BUILDING                                                                                      04 / 16
+
+
+
+
+Alice deposits Token A. Bob fulfills with
+TWO PARTIES, ONE PROGRAMMED GUARANTEE
+
+
+
+
+Token B. Program enforces atomic exchange.
+INSTRUCTIONS                                                       STATE TO STORE
+
+
+01   make  : lock maker Token A in PDA-controlled vault.           01   Maker pubkey for authority and Token B destination.
+02    take : transfer Token B to maker and release vault Token A   02   Token A mint + Token B mint addresses.
+     to taker atomically.
+                                                                   03   Requested amount for Token B side.
+03    cancel : maker reclaims Token A and closes escrow.
+                                                                   04   Vault reference and escrow PDA metadata.
+ EXERCISE 8 · ACCOUNTS + CPI                                                                                                                        05 / 16
+
+
+
+
+Escrow combines two token
+LONG ACCOUNT LISTS ARE NORMAL HERE
+
+
+
+
+transfers and account closures,
+so constraints must be precise.
+ make    accounts                                                               take    accounts
+ maker signer/payer, escrow PDA init, vault token account init, maker token A   taker signer, escrow, vault, maker token B destination, taker token A
+ source, mint A, token program.                                                 destination, taker token B source, both mints, token program.
+
+
+
+
+ cancel     accounts                                                            PDA authority
+ maker signer, escrow, vault, maker token A destination, token program; then    Vault token authority must be PDA-controlled so withdrawals only happen
+ close vault + escrow.                                                          via program logic.
+ EXERCISE 8 · TEST STRATEGY                                                                                                       06 / 16
+
+
+
+
+Start from failure paths and balance
+THIS WEEK'S MOST IMPORTANT TEST SUITE
+
+
+
+
+reconciliation, not only happy path execution.
+ CASE                           EXPECTED BEHAVIOR                                             SIGNAL
+
+ Make → Take                    Alice receives Token B, Bob receives Token A, vault closes.   Balances update and accounts closed.
+ Make → Cancel                  Alice gets Token A back, escrow closes.                       Original balance restored.
+ Double-take                    Second take fails because escrow is closed.                   Clear error, no token movement.
+ Take after cancel              Take fails after cancellation.                                Closed-account failure path.
+ Wrong mint / wrong authority   Invalid taker token and non-maker cancel both fail.           Constraint enforcement confirmed.
+ Balance reconciliation         Total token supply conserved across all tests.                No hidden mint/burn side effects.
+ EXERCISE 8 · PITFALLS                                                                        07 / 16
+
+
+
+
+Most critical failures are authority, mint
+GUARANTEE TRUSTLESS BEHAVIOR
+
+
+
+
+validation, and close-account handling.
+  ↯   VAULT AUTHORITY                               ↯   MINT VALIDATION
+      If maker is vault authority instead of PDA,       Check taker sends the expected mint, or
+      escrow can be bypassed entirely.                  worthless tokens can drain escrowed assets.
+
+
+  i   OWNER VS AUTHORITY                            i   CLOSURE RULES
+      Token account owner is Token Program; token       On completion/cancel, close vault and
+      authority is your PDA. Do not confuse them.       escrow and send rent lamports to intended
+                                                        recipient.
+ ● EXERCISE 9             08 / 16
+
+
+
+
+Read prices.
+DEFI BASICS
+
+
+
+
+Compare routes.
+PYTH · JUPITER · SPREAD   EX 09 →
+ EXERCISE 9 · CLI OUTPUT                                                                                  09 / 16
+
+
+
+
+Build one TypeScript tool that fetches, checks
+QUOTE ONLY. NO SWAP EXECUTION.
+
+
+
+
+freshness, and compares two price sources.
+01   Fetch SOL/USD from Pyth (devnet feed).                     EXAMPLE CLI SHAPE
+
+02   Print confidence interval and staleness warning if > 30s   SOL/USD (Pyth):     $148.23 +/- $0.12
+     old.                                                       Last updated:       2s ago
+03   Get SOL→USDC quote from Jupiter on mainnet.                SOL/USDC (Jupiter): $148.15 (for 1 SOL)
+                                                                Spread:             0.054%
+04   Compute implied Jupiter price and spread vs Pyth.
+ EXERCISE 9 · PITFALLS                                                                                                    10 / 16
+
+
+
+
+Most broken outputs come from environment
+NETWORKS, DECIMALS, API VERSIONS
+
+
+
+
+mismatch and unit conversion mistakes.
+ PITFALL                          CAUSE                                  FIX
+
+ Pyth account not found / stale   Wrong feed id or network mixup.        Lookup current feed ID for the target network.
+ Jupiter implied price off        Raw units not converted by decimals.   Use SOL 9 decimals, USDC 6 decimals in math.
+ Request failures                 Outdated Jupiter endpoint schema.      Confirm current API format in docs.
+ Nonsense comparison              Using devnet liquidity for quote.      Keep Jupiter quote on mainnet only.
+ ● EXERCISE 10                  11 / 16
+
+
+
+
+Mint and
+NFTS & METADATA
+
+
+
+
+verify assets.
+UMI · COLLECTION · ATTRIBUTES   EX 10 →
+ EXERCISE 10 · NFT FOUNDATIONS                                                                                                                 12 / 16
+
+
+
+
+On Solana, NFT fungibility is defined by
+TOKEN + METADATA = NFT EXPERIENCE
+
+
+
+
+mint supply and metadata structure.
+ NFT token primitive                                                         Chosen standard
+ Mint supply 1, decimals 0. Non-fungible behavior comes from metadata, not   Use Metaplex Token Metadata with Umi for widest ecosystem support.
+ special token math.
+
+
+
+
+ Alternatives                                                                Collection goal
+ Token-2022 metadata extension and Metaplex Core exist, but tooling          One parent collection NFT + three member NFTs with verified collection
+ coverage differs.                                                           references.
+ EXERCISE 10 · UMI WORKFLOW                                                                                                 13 / 16
+
+
+
+
+Umi signer/connection model differs
+SIGNER MODEL MATTERS
+
+
+
+
+from wallet-adapter and web3.js scripts.
+01   Create Umi instance on devnet.                                  URI RULE
+                                                                 i
+02   Load/generate keypair signer for scripts.                       Metadata URI must point to valid public JSON. Broken
+                                                                     JSON/URL means missing image/attributes in wallets.
+03   Create collection NFT, then member NFTs with verification
+     signature.
+                                                                     COLLECTION VERIFICATION
+04   Fetch collection items and print name/image/attributes.     ↯
+                                                                     If member NFTs are unverified, collection authority signature
+                                                                     was not included.
+ WEEK 5 · DONE WHEN                                                                                                 14 / 16
+
+
+
+
+Use this checklist as your capstone readiness gate.
+COMPLETION RUBRIC
+
+
+
+
+ESCROW + TESTS                                                  INTEGRATIONS
+
+
+01   make  , take , and cancel all function correctly.          01   DeFi CLI prints Pyth price + confidence + spread vs
+                                                                     Jupiter quote.
+02   Wrong mint / wrong authority / closed-account paths fail
+     clearly.                                                   02   NFT collection and three members minted and verified on
+                                                                     devnet.
+03   Balances reconcile with no token creation/destruction.
+                                                                03   Script lists collection NFTs with image and attributes.
+ WEEK 5 · STRETCH GOALS                                                                                 15 / 16
+
+
+
+
+Each stretch goal trains a production-level
+OPTIONAL DEPTH BEFORE CAPSTONE
+
+
+
+
+concern: liquidity, UX, or scale economics.
+  ⚙   ESCROW
+      Add partial fills with proportional amounts, overflow-safe arithmetic, and rounding-aware state
+      updates.
+
+  i   DEFI
+      Integrate live Pyth + quote panel into your Week 4 React frontend (quote-only).
+
+  ↯   NFTS
+      Compare cost of 100 regular NFTs vs 100 compressed NFTs (Bubblegum + Merkle tree).
+ WEEK 5 RECAP                                                                                                                             16 / 16
+
+
+
+
+Escrow proves program depth. DeFi and
+FINAL WEEK BEFORE CAPSTONE
+
+
+
+
+NFTs prove ecosystem fluency. You're
+ready to combine both into one product.
+ Protocol engineering                                                    Market integrations
+ You can design and test multi-party token flows with strict account     You can consume real-time pricing and route quotes safely for product
+ constraints.                                                            decisions.
+
+
+
+ Digital asset tooling                                                   Capstone readiness
+ You can mint, verify, and query NFT collections using modern Metaplex   You can choose escrow, DeFi, NFTs, or combine them in one complete dApp.
+ tooling.
+
+
+
+                                                                                                              NEXT WEEK → CAPSTONE BUILD
+

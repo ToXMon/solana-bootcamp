@@ -181,3 +181,219 @@
   - Anchor enum pattern: { draft: {} | null, active: {} | null, closed: {} | null }
   - Cloudflare Pages supports SPA routing automatically — no nginx config needed
   - getProgramAccounts with memcmp filter is single RPC call vs N round trips
+
+---
+
+## Week 5: Escrow, DeFi & NFTs
+**Status**: Deck 05 read; Exercises 8-10 not yet started  
+**Start Date**: 2026-06-29
+
+### Session 1 — 2026-06-29
+**Accomplished:**
+- Ingested Deck 05 — Escrow, DeFi & NFTs.
+- Saved the source PDF to `resources/uploads/Solana_Developer_Course___Deck_05___Escrow__DeFi___NFTs.pdf`.
+- Extracted full deck text to `resources/extracted/deck-05-escrow-defi-nfts.txt`.
+- Created Week 5 notes at `notes/week-05-escrow-defi-nfts.md`.
+- Backfilled the missing Week 3 notes at `notes/week-03-first-token.md` so weekly capture now covers Weeks 1-5.
+- Extracted requirements for Exercises 8, 9, and 10.
+- Captured Week 5 done-when rubric, pitfalls, test strategy, and stretch goals.
+
+**Key Learnings:**
+- Exercise 8 is the hardest program so far: a trustless token escrow with `make`, `take`, and `cancel`.
+- Escrow safety depends on PDA-controlled vault authority, mint validation, owner/authority reasoning, and account closure discipline.
+- Escrow testing should start with failure paths and balance reconciliation, not just happy path execution.
+- Exercise 9 is quote-only: compare Pyth SOL/USD price data with Jupiter SOL→USDC quote output without executing swaps.
+- Pyth/Jupiter comparison requires strict network awareness: Pyth devnet feed, Jupiter mainnet quote.
+- Exercise 10 introduces NFT collection tooling with Umi + Metaplex Token Metadata.
+- NFT verification depends on valid public metadata JSON and collection authority signature.
+
+**Upcoming Exercises:**
+| Exercise | Program/Tool | Focus |
+|---|---|---|
+| 8 | Trustless Escrow | PDA vault authority, SPL token CPI, atomic make/take/cancel flow |
+| 9 | DeFi CLI | Pyth price, confidence/staleness, Jupiter quote, spread math |
+| 10 | NFT Scripts | Umi signer model, collection NFT, verified member NFTs, metadata fetch |
+
+**Done-When Gate:**
+- Escrow instructions pass success and failure tests.
+- Escrow balances reconcile with no token creation/destruction.
+- DeFi CLI prints Pyth price, confidence interval, staleness, Jupiter implied price, and spread.
+- NFT scripts mint one collection and three verified member NFTs on devnet, then list image and attributes.
+
+**Next Step:** Scaffold Exercise 8 escrow program and write failing tests from the test matrix before implementing any instruction logic.
+
+### Session — Phase 0 Complete (2026-06-29)
+**Accomplished:**
+- Captured full Week 5 version matrix to `exercises/escrow-program/VERSION_MATRIX.md`
+- Cloned and read `solana-bootcamp-2026/04-escrow` reference: state.rs, make.rs, take.rs, refund.rs, errors.rs, mod.rs, test file
+- Translated Anchor 1.0 escrow architecture to Anchor 0.31 design in `exercises/escrow-program/DESIGN.md`
+- Defined PDA seeds: `["escrow", maker, seed_le_u64]`
+- Defined state fields: seed, maker, mint_a, mint_b, receive, bump
+- Defined vault authority rule: PDA-owned, not maker
+- Defined 8-case failure-path test matrix
+- Defined security review checklist
+- Documented 9 specific Anchor 1.0 to 0.31 translation changes
+
+**Key Design Decisions:**
+1. Classic SPL Token only (no TokenInterface) for simplicity on Anchor 0.31
+2. transfer_checked for all token CPIs to validate decimals
+3. init_if_needed feature flag for taker/maker ATA creation in take/cancel
+4. Tests in ts-mocha on devnet (matching Exercises 5 and 6 convention)
+5. Escrow and vault accounts closed with rent to maker on both take and cancel
+
+**Next Step:** Run `anchor test` to verify tests fail as expected (test-first), then implement instruction logic to make tests pass.
+
+### Session — Escrow Scaffold + Tests Complete (2026-06-30)
+**Accomplished:**
+- Scaffolded Exercise 8 Anchor project at `exercises/escrow-program/`
+- 14 files created: Anchor.toml, Cargo.toml, package.json, tsconfig.json, 7 Rust source files, test file, migrations
+- Program builds successfully: `anchor build` produces 282K `.so` binary
+- Program ID: `ET53vYqkdpdipNAuW636NUubyhAZ7oMDNr4kJH9VL8Ho`
+- IDL generated at `target/idl/escrow_program.json` (18K)
+- TypeScript types generated at `target/types/escrow_program.ts` (19K)
+- Test file written with 8-case failure-path matrix from DESIGN.md
+- Dependencies installed via yarn
+- blake3 pinned to 1.5.5 to avoid edition2024/rustc conflicts
+
+**Key Implementation Details:**
+- Single lib.rs pattern (matching proposal-state-machine approach)
+- Classic SPL Token: `anchor_spl::token` with `TransferChecked`
+- Vault authority = escrow PDA
+- PDA seeds: `[b"escrow", maker, seed.to_le_bytes()]`
+- `close=maker` on escrow in take and cancel
+- `init_if_needed` for taker/maker ATAs in take and cancel
+- No unwrap()/expect() in program code
+
+**Next Step:** Run `anchor test` to verify tests fail as expected (test-first), then implement instruction logic to make tests pass.
+
+### Session — Missing Deck Archive Backfill (2026-06-29)
+**Accomplished:**
+- Added missing source PDFs for Deck 03 and Deck 04 to `resources/uploads/`.
+- Extracted full text for Deck 03 and Deck 04 to `resources/extracted/`.
+- Linked Deck 03 and Deck 04 notes to their source PDF and extracted text artifacts.
+- Verified the project now has Deck PDFs 00-05 and weekly notes 01-05.
+
+### Session — Week 5 Implementation Plan (2026-06-29)
+**Accomplished:**
+- Created `tasks/week-05-implementation-plan.md` for Exercises 8-10.
+- Incorporated Deck 05 requirements and external repo guidance from Codama, Solana AI Kit, crypto-primitives examples, and solana-bootcamp-2026.
+- Confirmed local compatibility baseline: Anchor `0.31.0` for programs, `@coral-xyz/anchor` for Anchor client patterns, and separate Umi scripts for NFTs.
+- Set Exercise 8 as the first, test-first priority before DeFi CLI and NFT scripts.
+
+**Next Step:** Start Phase 0 by recording the toolchain/version matrix, then design the Exercise 8 escrow PDA/account model before coding.
+
+### Session — Exercise 8 Tests Pass on Localnet (2026-06-30)
+**Accomplished:**
+- Ran `NO_DNA=1 anchor test --provider.cluster localnet` — all 8 tests pass
+- Initial run: 5 passing, 3 failing (test harness bugs, not program bugs)
+- Fixed 3 test issues:
+  - Test 5 (Wrong mint B): ATA derivation was using wrong mint for maker_ata_b
+  - Test 6 (Non-maker cancel): maker_ata_a belonged to maker not randomUser
+  - Test 8 (Balance reconciliation): failed tests 5/6/7 left tokens trapped in unclosed escrows; added cleanup
+- Final result: 8 passing, 0 failing (15.75s)
+- Devnet deploy attempted but wallet has only 0.83 SOL (needs ~2.0 SOL); airdrop rate-limited
+- Tests verified on localnet instead — zero devnet SOL consumed
+
+**Test Results:**
+| # | Test | Result | Signal |
+|---|---|---|---|
+| 1 | Make -> Take | PASS | Balances update, accounts closed |
+| 2 | Make -> Cancel | PASS | Balance restored, accounts closed |
+| 3 | Double-take | PASS | AccountNotInitialized |
+| 4 | Take after cancel | PASS | AccountNotInitialized |
+| 5 | Wrong mint B | PASS | InvalidMintB (Error 6) |
+| 6 | Non-maker cancel | PASS | ConstraintSeeds |
+| 7 | Insufficient funds | PASS | Token CPI simulation failed |
+| 8 | Balance reconciliation | PASS | 98M + 2M = 100M conserved |
+
+**Key Learning:**
+- Test harness bugs can trigger earlier Anchor constraints before reaching the intended assertion target
+- Wrong ATA derivation causes `associated_token::mint` or `ConstraintTokenOwner` failures instead of `has_one` failures
+- Failed tests that leave escrows open trap tokens in vaults — cleanup needed for balance reconciliation
+- The Rust program logic was correct on first implementation — all 3 failures were test-side account derivation errors
+
+**Next Step:** Deploy to devnet after wallet funding, then proceed to Exercise 9 (DeFi CLI).
+
+### Session — Exercise 8 Devnet Deploy (2026-06-30)
+**Accomplished:**
+- Deployed escrow program to devnet after wallet funding
+- Program ID: ET53vYqkdpdipNAuW636NUubyhAZ7oMDNr4kJH9VL8Ho
+- Deploy signature: 5iiLu7gGo4kWN2uL2GxA7WqLoKei4cnQKxp2y2c5k8XdC3qBwiEY5bE9HzvxoxSEXHQhrRC95pbCew6MaP7vXiea
+- Verified on devnet: `solana program show` confirms program exists, authority, data length 288328 bytes
+- ProgramData Address: ACWvrX7gsQyBw1dzETXRTSsJm35YpudXdQzn99m42Y6n
+- Balance after deploy: 1.32 SOL
+- Deployment cost: ~2.01 SOL (rent exemption for 282K binary)
+
+**Explorer Links:**
+- Program: https://explorer.solana.com/address/ET53vYqkdpdipNAuW636NUubyhAZ7oMDNr4kJH9VL8Ho?cluster=devnet
+- Deploy TX: https://explorer.solana.com/tx/5iiLu7gGo4kWN2uL2GxA7WqLoKei4cnQKxp2y2c5k8XdC3qBwiEY5bE9HzvxoxSEXHQhrRC95pbCew6MaP7vXiea?cluster=devnet
+
+**Exercise 8 Status: COMPLETE**
+- 8/8 localnet tests passing
+- Devnet deployment verified
+- Next: Exercise 9 (DeFi CLI) and Exercise 10 (NFT scripts)
+
+### Session — Exercise 9 DeFi CLI Complete (2026-07-01)
+**Accomplished:**
+- Built standalone TypeScript CLI at exercises/defi-cli/
+- 11 files: package.json, tsconfig.json, README.md, .env.example, .gitignore, 5 source files
+- 489 lines of TypeScript across index.ts, pyth.ts, jupiter.ts, math.ts, types.ts
+- npm install successful (59 packages)
+- CLI runs successfully with live price output
+
+**Live CLI Output:**
+```
+SOL/USD (Pyth):         $78.47 +/- $0.04
+Last updated:              2s ago
+SOL/USDC (Jupiter):  $78.50 (for 1 SOL)
+Spread:                          0.032%
+No swap executed — quote only
+```
+
+**API Findings:**
+- Pyth feed ID verified via Hermes API: ef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d
+- Jupiter endpoint updated: lite-api.jup.ag/swap/v1/quote (old quote-api.jup.ag is dead)
+
+**Pitfalls Handled:**
+- Pyth feed ID verified from Hermes /v2/price_feeds query
+- SOL 9 decimals, USDC 6 decimals in math.ts
+- Jupiter mainnet-only (not devnet liquidity)
+- Staleness warning if Pyth price > 30s old
+- Graceful error handling for API failures
+
+**Exercise 9 Status: COMPLETE**
+- Next: Exercise 10 (NFT scripts with Umi + Metaplex)
+
+### Session — Exercise 10 NFT Collection Complete (2026-07-02)
+**Accomplished:**
+- Built standalone Umi + Metaplex scripts at exercises/nft-collection/
+- 11 files: package.json, tsconfig.json, README.md, 3 source files, 4 metadata JSON files, mint-addresses.json
+- npm install successful
+- Minted collection NFT + 3 verified member NFTs on devnet
+- All 3 members have verified collection references
+
+**On-Chain Results:**
+| Asset | Mint Address | Verified |
+|---|---|---|
+| Collection | 7hXSgWEDxava1y46Wt4HXCH8DJSzVPwdRMt4J6wvq5Uh | N/A |
+| Member 1 | 6cdybQ7xR8zB9juxyrhK1VgB8R5jSNsyy5AVWQdarddf | YES |
+| Member 2 | BDTDbfNMe3JxaisYyUBbYAd98D9oErkMv9WQFgZVDDrm | YES |
+| Member 3 | EoptMV1f96ujPVpfBzvycnuxxxtxkATf42CRwq6t8N3T | YES |
+
+**Explorer Links:**
+- Collection: https://explorer.solana.com/address/7hXSgWEDxava1y46Wt4HXCH8DJSzVPwdRMt4J6wvq5Uh?cluster=devnet
+- Member 1: https://explorer.solana.com/address/6cdybQ7xR8zB9juxyrhK1VgB8R5jSNsyy5AVWQdarddf?cluster=devnet
+- Member 2: https://explorer.solana.com/address/BDTDbfNMe3JxaisYyUBbYAd98D9oErkMv9WQFgZVDDrm?cluster=devnet
+- Member 3: https://explorer.solana.com/address/EoptMV1f96ujPVpfBzvycnuxxxtxkATf42CRwq6t8N3T?cluster=devnet
+
+**Key Decisions:**
+- Data URIs (base64 JSON) for on-chain metadata to avoid external hosting dependencies
+- Two-tier metadata: minimal on-chain, full JSON locally for list script display
+- Explicit verifyCollectionV1 call after each member mint
+
+**Bugs Fixed:**
+- Transaction too large (2204 bytes vs 1232 max): reduced on-chain metadata to minimal JSON
+- Collection field serialization: createV1 expects { key, verified } struct, not bare PublicKey
+
+**Exercise 10 Status: COMPLETE**
+- All 3 Week 5 exercises done
