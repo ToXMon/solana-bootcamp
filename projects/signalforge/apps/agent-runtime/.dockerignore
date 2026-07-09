@@ -6,4 +6,4 @@ dist
 Dockerfile
 deploy.yaml
 .dockerignore
-tsconfig.json
+# tsconfig.json needed by Dockerfile
