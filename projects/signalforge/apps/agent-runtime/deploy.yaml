@@ -1,0 +1,37 @@
+version: "2.0"
+
+services:
+  agent:
+    image: node:20-slim
+    expose:
+      - port: 3000
+        as: 80
+        to:
+          - global: true
+    env:
+      - "SOLANA_RPC_URL=https://devnet.helius-rpc.com/?api-key=499b2701-ac9d-45f0-b37f-30e2c68a590f"
+      - "PROGRAM_ID=4r3YHQYjCajoDA49R4GC18CFPNLoHBxF1PAe8jmJv5Bf"
+
+profiles:
+  compute:
+    agent:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 512Mi
+        storage:
+          size: 1Gi
+
+  placement:
+    dcloud:
+      pricing:
+        agent:
+          denom: uact
+          amount: 1000
+
+deployment:
+  agent:
+    dcloud:
+      profile: agent
+      count: 1
